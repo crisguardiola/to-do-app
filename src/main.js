@@ -1,24 +1,7 @@
 import './style.css'
 
-const STORAGE_KEY = 'todos'
-
+// Todos live in memory only — no backend or persistence
 let todos = []
-
-function loadTodos() {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      const parsed = JSON.parse(stored)
-      if (Array.isArray(parsed)) todos = parsed
-    }
-  } catch (_) {
-    todos = []
-  }
-}
-
-function saveTodos() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
-}
 
 function addTodo(text) {
   const trimmed = text.trim()
@@ -28,7 +11,6 @@ function addTodo(text) {
     text: trimmed,
     completed: false,
   })
-  saveTodos()
   renderTodos()
 }
 
@@ -36,14 +18,12 @@ function toggleTodo(id) {
   const todo = todos.find((t) => t.id === id)
   if (todo) {
     todo.completed = !todo.completed
-    saveTodos()
     renderTodos()
   }
 }
 
 function deleteTodo(id) {
   todos = todos.filter((t) => t.id !== id)
-  saveTodos()
   renderTodos()
 }
 
@@ -97,5 +77,4 @@ form.addEventListener('submit', (e) => {
   input.focus()
 })
 
-loadTodos()
 renderTodos()
