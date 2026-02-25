@@ -76,12 +76,14 @@ function renderTodos() {
 
 document.querySelector('#app').innerHTML = `
   <div class="todo-app">
-    <h1>Todo List</h1>
-    <form id="todo-form" class="todo-form">
-      <input type="text" id="todo-input" placeholder="What do you need to do?" autocomplete="off" />
-      <button type="submit">Add</button>
+    <header class="todo-header">
+      <h1 class="todo-title">Todo List</h1>
+    </header>
+    <form id="todo-form" class="todo-form" aria-label="Add todo">
+      <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
+      <button type="submit" class="todo-add">Add</button>
     </form>
-    <ul id="todo-list" class="todo-list"></ul>
+    <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
   </div>
 `
 
