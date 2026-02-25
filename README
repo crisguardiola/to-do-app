@@ -1,0 +1,13 @@
+Todo List 
+
+Features
+
+- Add new todos
+- Mark as complete (mark as incomplete)
+- Delete a todos
+
+Tech for the prototype
+
+- Vite
+- Vanila JS
+- No backend for now
