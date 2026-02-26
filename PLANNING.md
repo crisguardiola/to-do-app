@@ -12,8 +12,8 @@ Tech for the prototype
 - Vanila JS
 - No backend for now
 
-
 Todo's values
+
 - id
 - created_at
 - text
@@ -22,3 +22,4 @@ Todo's values
 - priority
 - category
 - position
+
