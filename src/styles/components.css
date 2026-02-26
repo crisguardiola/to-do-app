@@ -1,0 +1,152 @@
+@import './tokens.css';
+
+.todo-app {
+  text-align: left;
+}
+
+.todo-header {
+  margin-bottom: var(--space-xl);
+}
+
+.todo-title {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text);
+}
+
+.todo-error {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
+.todo-form {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.todo-form .todo-input {
+  flex: 1;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.todo-form .todo-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.todo-form .todo-input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-xs);
+}
+
+.todo-form .todo-add {
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.todo-form .todo-add:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.todo-form .todo-add:focus,
+.todo-form .todo-add:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-xs);
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ----- Todo items ----- */
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  min-height: var(--todo-item-min-height);
+}
+
+.todo-item:first-child {
+  padding-top: 0;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+/* Completion checkbox */
+.todo-item input[type="checkbox"] {
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+/* Item text */
+.todo-text {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+/* Completed state: strikethrough + muted */
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--color-completed);
+}
+
+/* Delete button */
+.todo-delete {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.todo-delete:hover {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.todo-delete:focus,
+.todo-delete:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-xs);
+}

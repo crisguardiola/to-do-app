@@ -1,0 +1,31 @@
+@import './tokens.css';
+
+:root {
+  font-family: var(--font-body);
+  line-height: var(--line-height-normal);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-size: var(--font-size-base);
+
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#app {
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--space-2xl);
+  width: 100%;
+}
