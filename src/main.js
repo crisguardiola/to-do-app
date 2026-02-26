@@ -1,30 +1,84 @@
 import './style.css'
+import { supabase } from './supabaseClient.js'
 
-// Todos live in memory only — no backend or persistence
 let todos = []
 
-function addTodo(text) {
-  const trimmed = text.trim()
-  if (!trimmed) return
-  todos.push({
-    id: String(Date.now()),
-    text: trimmed,
-    completed: false,
-  })
+async function fetchTodos() {
+  const { data, error } = await supabase
+    .from('todos')
+    .select('*')
+    .order('created_at', { ascending: true })
+  if (error) {
+    setError(error.message)
+    return
+  }
+  clearError()
+  todos = data ?? []
   renderTodos()
 }
 
-function toggleTodo(id) {
-  const todo = todos.find((t) => t.id === id)
-  if (todo) {
-    todo.completed = !todo.completed
-    renderTodos()
+function setError(message) {
+  const el = document.getElementById('todo-error')
+  if (el) {
+    el.textContent = message
+    el.hidden = false
   }
 }
 
-function deleteTodo(id) {
-  todos = todos.filter((t) => t.id !== id)
-  renderTodos()
+function clearError() {
+  const el = document.getElementById('todo-error')
+  if (el) {
+    el.textContent = ''
+    el.hidden = true
+  }
+}
+
+function setLoading(loading) {
+  const form = document.getElementById('todo-form')
+  const input = document.getElementById('todo-input')
+  const addBtn = form?.querySelector('.todo-add')
+  if (form) form.disabled = loading
+  if (input) input.disabled = loading
+  if (addBtn) addBtn.disabled = loading
+}
+
+async function addTodo(text) {
+  const trimmed = text.trim()
+  if (!trimmed) return
+  setLoading(true)
+  clearError()
+  const { error } = await supabase.from('todos').insert({ text: trimmed, completed: false })
+  setLoading(false)
+  if (error) {
+    setError(error.message)
+    return
+  }
+  await fetchTodos()
+}
+
+async function toggleTodo(id) {
+  const todo = todos.find((t) => t.id === id)
+  if (!todo) return
+  clearError()
+  const { error } = await supabase
+    .from('todos')
+    .update({ completed: !todo.completed })
+    .eq('id', id)
+  if (error) {
+    setError(error.message)
+    return
+  }
+  await fetchTodos()
+}
+
+async function deleteTodo(id) {
+  clearError()
+  const { error } = await supabase.from('todos').delete().eq('id', id)
+  if (error) {
+    setError(error.message)
+    return
+  }
+  await fetchTodos()
 }
 
 function renderTodos() {
@@ -59,6 +113,7 @@ document.querySelector('#app').innerHTML = `
     <header class="todo-header">
       <h1 class="todo-title">Todo List</h1>
     </header>
+    <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
     <form id="todo-form" class="todo-form" aria-label="Add todo">
       <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
       <button type="submit" class="todo-add">Add</button>
@@ -77,4 +132,5 @@ form.addEventListener('submit', (e) => {
   input.focus()
 })
 
-renderTodos()
+setLoading(true)
+fetchTodos().finally(() => setLoading(false))

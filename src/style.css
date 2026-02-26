@@ -109,6 +109,12 @@ body {
   color: var(--color-text);
 }
 
+.todo-error {
+  margin: 0 0 var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+}
+
 .todo-form {
   display: flex;
   gap: var(--space-sm);
