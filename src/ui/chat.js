@@ -103,6 +103,26 @@ export function initChat({ addTodo, loadTodos }) {
     loading?.remove()
   }
 
+  document.querySelectorAll('.chat-prompt-card').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const prompt = btn.getAttribute('data-prompt')
+      if (prompt && input) {
+        input.value = prompt
+        input.focus()
+      }
+    })
+  })
+
+  // Enter submits; Shift+Enter inserts newline (textarea only)
+  if (input.tagName === 'TEXTAREA') {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        form.requestSubmit()
+      }
+    })
+  }
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
     const text = input.value.trim()

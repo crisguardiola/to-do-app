@@ -20,13 +20,18 @@
             <header class="chat-header">
               <div class="chat-header-text">
                 <h2 class="chat-title">Hello,</h2>
-                <p class="chat-subtitle">Describe a goal or task</p>
+                <p class="chat-subtitle">What's keeping you busy lately?</p>
               </div>
             </header>
             <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
+            <div class="chat-prompts" aria-label="Example prompts">
+              <button type="button" class="chat-prompt-card" data-prompt="I need to prepare a benchmarking presentation">I need to prepare a benchmarking presentation</button>
+              <button type="button" class="chat-prompt-card" data-prompt="I'm looking to onboard a new employee joining next week">I'm looking to onboard a new employee joining next week</button>
+              <button type="button" class="chat-prompt-card" data-prompt="I want to plan a surprise birthday party for a friend">I want to plan a surprise birthday party for a friend</button>
+            </div>
             <form id="chat-form" class="chat-form" aria-label="Send message">
               <div class="chat-input-wrap">
-                <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
+                <textarea id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." aria-label="Your message" rows="1"></textarea>
                 <button type="submit" id="chat-send-btn" class="btn chat-send-btn" aria-label="Send message">Send</button>
               </div>
             </form>
@@ -36,6 +41,14 @@
         <div class="todo-app">
           <header class="todo-header">
             <h1 class="todo-title">Todo List</h1>
+            <div class="todo-sort-bar">
+              <label for="todo-sort" class="todo-sort-label">Sort by</label>
+              <select id="todo-sort" class="todo-sort-select" aria-label="Sort todos by priority">
+                <option value="default">Default order</option>
+                <option value="priority-high">Priority: High first</option>
+                <option value="priority-low">Priority: Low first</option>
+              </select>
+            </div>
           </header>
           <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
             <div class="auth-modal-content">
@@ -64,14 +77,6 @@
             </select>
             <button type="submit" class="btn todo-add">Add</button>
           </form>
-          <div class="todo-sort-bar">
-            <label for="todo-sort" class="todo-sort-label">Sort by</label>
-            <select id="todo-sort" class="todo-sort-select" aria-label="Sort todos by priority">
-              <option value="default">Default order</option>
-              <option value="priority-high">Priority: High first</option>
-              <option value="priority-low">Priority: Low first</option>
-            </select>
-          </div>
           <p id="todo-empty-state" class="todo-empty-state" hidden>No todos yet. Add one above.</p>
           <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
         </div>
