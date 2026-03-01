@@ -22,9 +22,6 @@ app.use((req, res, next) => {
 
 app.post('/api/chat', async (req, res) => {
   const apiKey = process.env.GEMINI_API_KEY
-  // #region agent log
-  fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:chatStart',message:'/api/chat hit',data:{hasKey:!!apiKey},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
-  // #endregion
   if (!apiKey) {
     return res.status(503).json({ error: 'AI service is not configured.' })
   }
@@ -43,9 +40,6 @@ app.post('/api/chat', async (req, res) => {
     const result = await model.generateContent(message.trim())
     const response = result.response
     if (!response?.text) {
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:noText',message:'Gemini response has no text',data:{},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
-      // #endregion
       return res.status(502).json({ error: 'Invalid response from AI.' })
     }
     const raw = response.text().trim()
@@ -53,26 +47,14 @@ app.post('/api/chat', async (req, res) => {
     try {
       parsed = JSON.parse(raw)
     } catch (parseErr) {
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:parseFail',message:'JSON parse failed',data:{rawPreview:raw.slice(0,200)},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
-      // #endregion
       return res.status(502).json({ error: 'Invalid response from AI.' })
     }
     if (!Array.isArray(parsed)) {
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:notArray',message:'Parsed value is not array',data:{typeof:typeof parsed},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
-      // #endregion
       return res.status(502).json({ error: 'Invalid response from AI.' })
     }
     const tasks = parsed.filter((item) => typeof item === 'string').map((s) => String(s).trim()).filter(Boolean)
-    // #region agent log
-    fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:success',message:'Returning 200 with tasks',data:{tasksLen:tasks.length},timestamp:Date.now(),hypothesisId:'H5'})}).catch(()=>{});
-    // #endregion
     return res.status(200).json({ tasks })
   } catch (err) {
-    // #region agent log
-    fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'server.js:catch',message:'Gemini or response threw',data:{errMessage:err?.message},timestamp:Date.now(),hypothesisId:'H4'})}).catch(()=>{});
-    // #endregion
     console.error('Gemini API error:', err?.message || err)
     const msg = String(err?.message || '')
     const apiKeyInvalid = msg.includes('API key not valid') || msg.includes('API_KEY_INVALID')

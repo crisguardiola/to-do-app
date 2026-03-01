@@ -184,38 +184,23 @@ export function initChat({ addTodo, loadTodos }) {
     sendBtn.disabled = true
 
     try {
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'chat.js:beforeFetch',message:'Chat send starting',data:{messageLen:text.length},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-      // #endregion
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text }),
       })
       const data = await res.json().catch(() => ({}))
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'chat.js:afterFetch',message:'Response received',data:{status:res.status,ok:res.ok,hasError:!!data.error,tasksLen:Array.isArray(data.tasks)?data.tasks.length:null,dataError:data.error},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
-      // #endregion
       removeLoading()
 
       if (!res.ok || data.error) {
-        // #region agent log
-        fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'chat.js:branchNotOk',message:'Showing error: !res.ok or data.error',data:{resOk:res.ok,dataError:data.error},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
-        // #endregion
         appendMessage({ role: 'assistant', content: data.error || FRIENDLY_ERROR })
       } else if (Array.isArray(data.tasks) && data.tasks.length > 0) {
         incrementUsage()
         appendMessage({ role: 'assistant', content: '', tasks: data.tasks })
       } else {
-        // #region agent log
-        fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'chat.js:branchNoTasks',message:'Showing FRIENDLY_ERROR: no tasks or empty',data:{tasksLen:Array.isArray(data.tasks)?data.tasks.length:undefined},timestamp:Date.now(),hypothesisId:'H5'})}).catch(()=>{});
-        // #endregion
         appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })
       }
     } catch (err) {
-      // #region agent log
-      fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'3e7eed'},body:JSON.stringify({sessionId:'3e7eed',location:'chat.js:catch',message:'Fetch threw',data:{errMessage:err?.message},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-      // #endregion
       removeLoading()
       appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })
     } finally {
