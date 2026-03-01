@@ -1,10 +1,7 @@
-// --- AI Chat panel: drawer, messages, rate limit, suggested tasks ---
+// --- AI Chat panel: drawer, messages, suggested tasks ---
 
-const STORAGE_KEY = 'todo_ai_chat_usage'
-const DAILY_LIMIT = 10
 const FRIENDLY_ERROR = "Sorry, I couldn't process that. Please try again later."
 const BACKEND_UNREACHABLE = "Chat isn't available. Start the backend: in the project folder run `node server.js`, then reload."
-const LIMIT_MESSAGE = "Sorry, you've reached the daily limit of 10 AI requests. Try again tomorrow."
 
 /**
  * @typedef {{ role: 'user' | 'assistant', content: string, tasks?: string[] }} ChatMessage
@@ -12,48 +9,6 @@ const LIMIT_MESSAGE = "Sorry, you've reached the daily limit of 10 AI requests. 
 
 /** @type {ChatMessage[]} */
 let messages = []
-
-/**
- * Get today's date as YYYY-MM-DD.
- * @returns {string}
- */
-function getTodayKey() {
-  return new Date().toISOString().slice(0, 10)
-}
-
-/**
- * @returns {{ date: string, count: number }}
- */
-function getUsage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { date: '', count: 0 }
-    const data = JSON.parse(raw)
-    return { date: String(data.date || ''), count: Number(data.count) || 0 }
-  } catch {
-    return { date: '', count: 0 }
-  }
-}
-
-function saveUsage(date, count) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ date, count }))
-  } catch (_) {}
-}
-
-function isOverLimit() {
-  const today = getTodayKey()
-  const { date, count } = getUsage()
-  if (date !== today) return false
-  return count >= DAILY_LIMIT
-}
-
-function incrementUsage() {
-  const today = getTodayKey()
-  const { date, count } = getUsage()
-  const newCount = date === today ? count + 1 : 1
-  saveUsage(today, newCount)
-}
 
 /**
  * @param {{ addTodo: (text: string, priority?: string) => Promise<{ error: Error | null }>, loadTodos: () => Promise<void> }} deps
@@ -173,11 +128,6 @@ export function initChat({ addTodo, loadTodos }) {
     appendMessage({ role: 'user', content: text })
     input.value = ''
 
-    if (isOverLimit()) {
-      appendMessage({ role: 'assistant', content: LIMIT_MESSAGE })
-      return
-    }
-
     const loadingEl = renderLoading()
     messagesEl?.appendChild(loadingEl)
     scrollToBottom()
@@ -197,9 +147,11 @@ export function initChat({ addTodo, loadTodos }) {
         const errorMsg = (res.status === 404 || res.status === 502) && !data.error
           ? BACKEND_UNREACHABLE
           : (data.error || FRIENDLY_ERROR)
+        // #region agent log
+        fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'087c17'},body:JSON.stringify({sessionId:'087c17',location:'chat.js:errorDisplay',message:'Showing error',data:{status:res.status,errorMsgPreview:(errorMsg||'').slice(0,120)},timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
         appendMessage({ role: 'assistant', content: errorMsg })
       } else if (Array.isArray(data.tasks) && data.tasks.length > 0) {
-        incrementUsage()
         appendMessage({ role: 'assistant', content: '', tasks: data.tasks })
       } else {
         appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })

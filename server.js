@@ -3,8 +3,13 @@ import express from 'express'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import fs from 'fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const DEBUG_LOG = path.join(__dirname, '.cursor', 'debug-087c17.log')
+function debugLog(payload) {
+  try { fs.appendFileSync(DEBUG_LOG, JSON.stringify({ ...payload, timestamp: Date.now() }) + '\n') } catch (_) {}
+}
 const app = express()
 const PORT = process.env.PORT || 3001
 
@@ -58,9 +63,18 @@ app.post('/api/chat', async (req, res) => {
     console.error('Gemini API error:', err?.message || err)
     const msg = String(err?.message || '')
     const apiKeyInvalid = msg.includes('API key not valid') || msg.includes('API_KEY_INVALID')
-    const error = apiKeyInvalid
-      ? 'Invalid Gemini API key. Please add a valid GEMINI_API_KEY to your .env file (get one at https://aistudio.google.com/apikey).'
-      : 'Sorry, I couldn\'t process that. Please try again later.'
+    const quotaExceeded = msg.includes('429') || msg.includes('quota') || msg.includes('Too Many Requests') || msg.includes('exceeded your current quota') || msg.includes('Quota exceeded')
+    let error
+    if (apiKeyInvalid) {
+      error = 'Invalid Gemini API key. Please add a valid GEMINI_API_KEY to your .env file (get one at https://aistudio.google.com/apikey).'
+    } else if (quotaExceeded) {
+      error = "You've reached the free tier limit for the AI (about 20 requests per day). Try again tomorrow or check your plan: https://ai.google.dev/gemini-api/docs/rate-limits"
+    } else {
+      error = msg || 'Sorry, I couldn\'t process that. Please try again later.'
+    }
+    // #region agent log
+    debugLog({ sessionId: '087c17', location: 'server.js:catch', message: 'Error branch', data: { msgPreview: msg.slice(0, 180), quotaExceeded, errorPreview: error.slice(0, 100) } })
+    // #endregion
     return res.status(502).json({ error })
   }
 })

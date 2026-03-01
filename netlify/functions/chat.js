@@ -76,9 +76,15 @@ exports.handler = async (event, context) => {
     console.error('Gemini API error:', err?.message || err)
     const msg = String(err?.message || '')
     const apiKeyInvalid = msg.includes('API key not valid') || msg.includes('API_KEY_INVALID')
-    const error = apiKeyInvalid
-      ? 'Invalid Gemini API key. Please add a valid GEMINI_API_KEY to your .env file (get one at https://aistudio.google.com/apikey).'
-      : "Sorry, I couldn't process that. Please try again later."
+    const quotaExceeded = msg.includes('429') || msg.includes('quota') || msg.includes('Too Many Requests') || msg.includes('exceeded your current quota') || msg.includes('Quota exceeded')
+    let error
+    if (apiKeyInvalid) {
+      error = 'Invalid Gemini API key. Please add a valid GEMINI_API_KEY to your .env file (get one at https://aistudio.google.com/apikey).'
+    } else if (quotaExceeded) {
+      error = "You've reached the free tier limit for the AI (about 20 requests per day). Try again tomorrow or check your plan: https://ai.google.dev/gemini-api/docs/rate-limits"
+    } else {
+      error = msg || "Sorry, I couldn't process that. Please try again later."
+    }
     return jsonResponse(502, { error })
   }
 }
