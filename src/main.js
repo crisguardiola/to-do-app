@@ -12,6 +12,9 @@ import {
   wireAuthUI,
 } from './ui/auth.js'
 
+// Ensure auth popover is never shown on load—only when user clicks Sign in or Sign up
+hideAuthModal()
+
 // --- Load & render ---
 async function loadTodos() {
   setLoading(true)
@@ -28,13 +31,15 @@ async function loadTodos() {
   })
 }
 
-// --- Auth: ensure session then init ---
+// --- Auth: ensure session then init (anonymous first, no blocking) ---
 async function init() {
   setLoading(true)
   const { user, error: sessionError } = await ensureSession()
   if (sessionError) {
     setLoading(false)
-    setError(sessionError.message)
+    renderAuthBar(null)
+    setError('Sign in or create an account to save your todos.')
+    await loadTodos()
     return
   }
   renderAuthBar(user ?? null)
@@ -116,8 +121,8 @@ async function handleSignIn(email, password) {
 }
 
 wireAuthUI({
-  onCreateAccount: () => showCreateAccountModal(handleCreateAccount),
   onSignIn: () => showSignInModal(handleSignIn),
+  onCreateAccount: () => showCreateAccountModal(handleCreateAccount),
   onSignOut: async () => {
     await signOut()
     await init()

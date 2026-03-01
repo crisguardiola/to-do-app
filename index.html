@@ -11,11 +11,9 @@
       <div class="todo-app">
         <header class="todo-header">
           <h1 class="todo-title">Todo List</h1>
-          <div id="auth-bar" class="auth-bar" aria-live="polite">
-            <span id="auth-label" class="auth-label"></span>
-            <button type="button" id="auth-create-account" class="btn btn-text" hidden>Create account</button>
-            <button type="button" id="auth-sign-in" class="btn btn-text" hidden>Sign in</button>
-            <button type="button" id="auth-sign-out" class="btn btn-text" hidden>Sign out</button>
+          <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
+            <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
+            <button type="button" id="auth-account-btn" class="btn btn-text auth-link" hidden>Sign in</button>
           </div>
         </header>
         <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
@@ -30,6 +28,8 @@
                 <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
               </div>
             </form>
+            <p id="auth-modal-switch" class="auth-modal-switch" hidden>Already have an account? <button type="button" id="auth-switch-to-signin" class="btn btn-text">Sign in</button></p>
+            <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="btn btn-text">Sign up</button></p>
           </div>
         </div>
         <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>

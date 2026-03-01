@@ -112,7 +112,7 @@ body {
   color: var(--color-text);
 }
 
-/* --- Auth bar --- */
+/* --- Auth bar (minimal: single "Sign in" link when guest, email + Sign out when signed in) --- */
 .auth-bar {
   display: flex;
   align-items: center;
@@ -121,10 +121,26 @@ body {
   margin-top: var(--space-md);
 }
 
-.auth-label {
+.auth-link {
+  margin-left: auto;
+}
+
+.auth-signed-in-message {
+  margin: 0;
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  margin-right: var(--space-sm);
+}
+
+
+.auth-modal-switch {
+  margin-top: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.auth-modal-switch .btn-text {
+  padding: 0;
+  vertical-align: baseline;
 }
 
 .btn-text {
@@ -138,16 +154,23 @@ body {
   background: var(--color-border-subtle);
 }
 
-/* --- Auth modal --- */
+/* --- Auth modal (only visible when not [hidden]; never show on page load) --- */
 .auth-modal {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
   padding: var(--space-xl);
+}
+
+.auth-modal[hidden] {
+  display: none !important;
+}
+
+.auth-modal:not([hidden]) {
+  display: flex;
 }
 
 .auth-modal-content {

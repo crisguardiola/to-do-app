@@ -4,31 +4,26 @@
  * @param {{ isAnonymous: boolean, email?: string | null }} user
  */
 export function renderAuthBar(user) {
-  const labelEl = document.getElementById('auth-label')
-  const createBtn = document.getElementById('auth-create-account')
-  const signInBtn = document.getElementById('auth-sign-in')
-  const signOutBtn = document.getElementById('auth-sign-out')
+  const signedInTextEl = document.getElementById('auth-signed-in-text')
+  const signedInMessageEl = document.getElementById('auth-signed-in-message')
+  const accountBtn = document.getElementById('auth-account-btn')
 
-  if (!labelEl || !createBtn || !signInBtn || !signOutBtn) return
+  if (!accountBtn) return
 
-  if (!user) {
-    labelEl.textContent = ''
-    createBtn.hidden = true
-    signInBtn.hidden = true
-    signOutBtn.hidden = true
-    return
-  }
-
-  if (user.is_anonymous) {
-    labelEl.textContent = 'Using as guest'
-    createBtn.hidden = false
-    signInBtn.hidden = false
-    signOutBtn.hidden = true
+  if (!user || user.is_anonymous) {
+    if (signedInMessageEl && signedInTextEl) {
+      signedInMessageEl.hidden = false
+      signedInTextEl.textContent = 'Using app as guest'
+    }
+    accountBtn.textContent = 'Sign in'
+    accountBtn.hidden = false
   } else {
-    labelEl.textContent = user.email ? `Signed in as ${user.email}` : 'Signed in'
-    createBtn.hidden = true
-    signInBtn.hidden = true
-    signOutBtn.hidden = false
+    if (signedInMessageEl && signedInTextEl) {
+      signedInMessageEl.hidden = false
+      signedInTextEl.textContent = user.email ? `Signed in as ${user.email}` : 'Signed in'
+    }
+    accountBtn.textContent = 'Sign out'
+    accountBtn.hidden = false
   }
 }
 
@@ -47,12 +42,12 @@ export function showCreateAccountModal(onSubmit) {
 
   if (!modal || !title || !form || !emailEl || !passwordEl || !formError || !submitBtn) return
 
-  title.textContent = 'Create account'
+  title.textContent = 'Sign up'
   emailEl.required = true
   passwordEl.required = true
   passwordEl.placeholder = 'Password (min 6 characters)'
   passwordEl.minLength = 6
-  submitBtn.textContent = 'Create account'
+  submitBtn.textContent = 'Sign up'
   formError.hidden = true
   formError.textContent = ''
   emailEl.value = ''
@@ -67,6 +62,10 @@ export function showCreateAccountModal(onSubmit) {
   }
 
   form.onsubmit = handler
+  const switchToSignIn = document.getElementById('auth-modal-switch-signin')
+  const switchToCreate = document.getElementById('auth-modal-switch')
+  if (switchToSignIn) switchToSignIn.hidden = true
+  if (switchToCreate) switchToCreate.hidden = false
   modal.hidden = false
   emailEl.focus()
 }
@@ -105,6 +104,10 @@ export function showSignInModal(onSubmit) {
   }
 
   form.onsubmit = handler
+  const switchToSignIn = document.getElementById('auth-modal-switch-signin')
+  const switchToCreate = document.getElementById('auth-modal-switch')
+  if (switchToSignIn) switchToSignIn.hidden = false
+  if (switchToCreate) switchToCreate.hidden = true
   modal.hidden = false
   emailEl.focus()
 }
@@ -134,22 +137,29 @@ export function setAuthFormError(message) {
 }
 
 /**
- * Wire auth bar buttons and modal cancel. Call with auth handlers.
+ * Wire auth bar and modal. Call with auth handlers.
  * @param {{
- *   onCreateAccount: () => void,
  *   onSignIn: () => void,
+ *   onCreateAccount: () => void,
  *   onSignOut: () => void,
  * }}
  */
-export function wireAuthUI({ onCreateAccount, onSignIn, onSignOut }) {
-  const createBtn = document.getElementById('auth-create-account')
-  const signInBtn = document.getElementById('auth-sign-in')
-  const signOutBtn = document.getElementById('auth-sign-out')
+export function wireAuthUI({ onSignIn, onCreateAccount, onSignOut }) {
+  const accountBtn = document.getElementById('auth-account-btn')
   const cancelBtn = document.getElementById('auth-cancel')
+  const switchToCreate = document.getElementById('auth-switch-to-create')
+  const switchToSignin = document.getElementById('auth-switch-to-signin')
 
-  createBtn?.addEventListener('click', onCreateAccount)
-  signInBtn?.addEventListener('click', onSignIn)
-  signOutBtn?.addEventListener('click', onSignOut)
+  accountBtn?.addEventListener('click', (e) => {
+    e.preventDefault()
+    if (accountBtn.textContent === 'Sign out') {
+      onSignOut()
+    } else {
+      onSignIn()
+    }
+  })
   cancelBtn?.addEventListener('click', hideAuthModal)
+  switchToCreate?.addEventListener('click', () => { onCreateAccount() })
+  switchToSignin?.addEventListener('click', () => { onSignIn() })
   setupAuthModalBackdrop()
 }

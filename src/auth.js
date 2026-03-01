@@ -42,13 +42,24 @@ export function onAuthStateChange(callback) {
 }
 
 /**
- * Convert anonymous user to permanent account (same user id → todos stay attached).
- * Requires manual linking enabled in Supabase and email verification before setting password.
+ * Create account: convert anonymous user to permanent (same user id → todos stay attached),
+ * or create a new account if there is no session (e.g. anonymous sign-in disabled).
  * @param {{ email: string, password: string }} opts
  * @returns {{ data: object | null, error: Error | null }}
  */
 export async function signUpWithEmail(opts) {
-  const { data, error } = await supabase.auth.updateUser({
+  const { data: { user: currentUser } } = await supabase.auth.getUser()
+  if (currentUser?.is_anonymous) {
+    const { data, error } = await supabase.auth.updateUser({
+      email: opts.email,
+      password: opts.password,
+    })
+    return {
+      data: data?.user ?? null,
+      error: error ? new Error(error.message) : null,
+    }
+  }
+  const { data, error } = await supabase.auth.signUp({
     email: opts.email,
     password: opts.password,
   })
