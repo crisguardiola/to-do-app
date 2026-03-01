@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo List</title>
+    <title>Your List</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -42,17 +42,6 @@
         </aside>
         <div class="app-divider" aria-hidden="true"></div>
         <div class="todo-app">
-          <header class="todo-header">
-            <h1 class="todo-title">Todo List</h1>
-            <div class="todo-sort-bar">
-              <label for="todo-sort" class="todo-sort-label">Sort by</label>
-              <select id="todo-sort" class="todo-sort-select" aria-label="Sort todos by priority">
-                <option value="default">Default order</option>
-                <option value="priority-high">Priority: High first</option>
-                <option value="priority-low">Priority: Low first</option>
-              </select>
-            </div>
-          </header>
           <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
             <div class="auth-modal-content">
               <h2 id="auth-modal-title" class="auth-modal-title"></h2>
@@ -76,15 +65,36 @@
             <p class="todo-empty-state__subtitle">Start with a to do or add the chat to assist you</p>
           </div>
           <form id="todo-form" class="todo-form" aria-label="Add todo">
-            <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
-            <select id="todo-priority" class="todo-priority-select priority-undefined" aria-label="Priority" title="Priority">
-              <option value="undefined" selected>Undefined</option>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+            <div class="todo-input-wrap">
+              <div class="todo-priority-tag-wrap">
+                <button type="button" class="todo-priority-tag todo-priority-tag--undefined" id="todo-priority-tag" aria-label="Priority" aria-haspopup="listbox" aria-expanded="false" title="Priority">Priority</button>
+                <div class="todo-priority-dropdown" id="todo-priority-dropdown" role="listbox" aria-label="Choose priority" hidden>
+                  <button type="button" role="option" class="todo-priority-tag-option todo-priority-tag-option--low" data-value="low">Low</button>
+                  <button type="button" role="option" class="todo-priority-tag-option todo-priority-tag-option--medium" data-value="medium">Medium</button>
+                  <button type="button" role="option" class="todo-priority-tag-option todo-priority-tag-option--high" data-value="high">High</button>
+                </div>
+              </div>
+              <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
+            </div>
+            <input type="hidden" id="todo-priority" name="priority" value="undefined" />
             <button type="submit" class="btn todo-add">Add</button>
           </form>
+          <header class="todo-header">
+            <h1 class="todo-title">Your List</h1>
+            <div class="todo-sort-bar">
+              <span class="todo-sort-label">Sort by</span>
+              <div class="todo-sort-tag-wrap">
+                <button type="button" class="todo-sort-tag todo-sort-tag--default" id="todo-sort-tag" aria-label="Sort order" aria-haspopup="listbox" aria-expanded="false">Default order</button>
+                <div class="todo-sort-dropdown" id="todo-sort-dropdown" role="listbox" aria-label="Sort order" hidden>
+                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--default" data-value="default">Default order</button>
+                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-high" data-value="priority-high">High first</button>
+                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-medium" data-value="priority-medium">Medium first</button>
+                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-low" data-value="priority-low">Low first</button>
+                </div>
+              </div>
+              <input type="hidden" id="todo-sort" value="default" />
+            </div>
+          </header>
           <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
         </div>
       </div>
