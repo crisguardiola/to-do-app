@@ -1,83 +1,7 @@
-:root {
-  /* ----- Colors (clean, minimal theme) ----- */
-  --color-bg: #ffffff;
-  --color-bg-elevated: #ffffff;
-  --color-surface: #ffffff;
-  --color-border: #e5e5e5;
-  --color-border-subtle: #f0f0f0;
-  --color-text: #171717;
-  --color-text-secondary: #737373;
-  --color-text-muted: #a3a3a3;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-muted: #dbeafe;
-  --color-danger: #dc2626;
-  --color-danger-hover: #b91c1c;
-  --color-success: #16a34a;
-  --color-completed: #a3a3a3;
+/* Layout and component styles. Theme (colors, spacing, type) lives in design-tokens.css */
+@import './design-tokens.css';
 
-  /* ----- Spacing scale (xs → xl) ----- */
-  --space-xs: 0.25rem;   /* 4px */
-  --space-sm: 0.5rem;   /* 8px */
-  --space-md: 0.75rem;   /* 12px */
-  --space-lg: 1rem;      /* 16px */
-  --space-xl: 1.5rem;    /* 24px */
-  --space-2xl: 2rem;    /* 32px */
-
-  /* ----- Typography ----- */
-  --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-size-xs: 0.75rem;    /* 12px */
-  --font-size-sm: 0.875rem;   /* 14px */
-  --font-size-base: 1rem;     /* 16px */
-  --font-size-lg: 1.125rem;  /* 18px */
-  --font-size-xl: 1.25rem;   /* 20px */
-  --font-size-2xl: 1.5rem;   /* 24px */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.625;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-
-  /* ----- Border radius ----- */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-full: 9999px;
-
-  /* Base styles using tokens */
-  font-family: var(--font-body);
-  line-height: var(--line-height-normal);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  font-size: var(--font-size-base);
-
-  color-scheme: light dark;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0a0a0a;
-    --color-bg-elevated: #171717;
-    --color-surface: #1a1a1a;
-    --color-border: #262626;
-    --color-border-subtle: #1f1f1f;
-    --color-text: #fafafa;
-    --color-text-secondary: #a3a3a3;
-    --color-text-muted: #737373;
-    --color-accent: #3b82f6;
-    --color-accent-hover: #60a5fa;
-    --color-accent-muted: #1e3a5f;
-    --color-completed: #737373;
-  }
-}
-
+/* --- Layout --- */
 body {
   margin: 0;
   display: flex;
@@ -93,6 +17,7 @@ body {
   width: 100%;
 }
 
+/* --- Todo app --- */
 .todo-app {
   text-align: left;
 }
@@ -272,5 +197,3 @@ button:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: var(--space-xs);
 }
-
-/* Light theme uses default :root tokens; dark theme overrides above */
