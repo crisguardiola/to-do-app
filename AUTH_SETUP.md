@@ -44,3 +44,11 @@ If **Confirm email** is enabled in Authentication → Settings, users who choose
 | **Create account** | The current anonymous user is upgraded with email/password (same user id). Their existing todos stay attached. |
 | **Sign in** | User signs in with an existing account. Any todos created in this session as a guest are moved to that account. |
 | **Sign out** | Session ends. On the next visit, a new anonymous session is created. |
+
+## Netlify: AI chat
+
+For the AI chat to work on Netlify, set **GEMINI_API_KEY** in the site’s environment variables:
+
+1. Netlify Dashboard → your site → **Site configuration** → **Environment variables**.
+2. Add `GEMINI_API_KEY` with your Gemini API key (same as in local `.env`). Get one at [Google AI Studio](https://aistudio.google.com/apikey).
+3. Redeploy so the serverless function receives the variable.
