@@ -26,12 +26,16 @@ export function getTodos() {
   return todos
 }
 
-// --- Mutations (add, toggle, delete) ---
+/** @typedef {'undefined' | 'low' | 'medium' | 'high'} TodoPriority */
+
+// --- Mutations (add, toggle, delete, priority) ---
 /**
  * Insert a new todo for the current user.
+ * @param {string} text - Todo text
+ * @param {TodoPriority} [priority='undefined'] - Priority (default Undefined)
  * @returns {{ error: Error | null }}
  */
-export async function addTodo(text) {
+export async function addTodo(text, priority = 'undefined') {
   const trimmed = text.trim()
   if (!trimmed) {
     return { error: null }
@@ -40,9 +44,10 @@ export async function addTodo(text) {
   if (!user) {
     return { error: new Error('Not signed in') }
   }
+  const validPriority = ['undefined', 'low', 'medium', 'high'].includes(priority) ? priority : 'undefined'
   const { error } = await supabase
     .from('todos')
-    .insert({ text: trimmed, completed: false, user_id: user.id })
+    .insert({ text: trimmed, completed: false, user_id: user.id, priority: validPriority })
   return { error: error ? new Error(error.message) : null }
 }
 
@@ -66,5 +71,20 @@ export async function toggleTodo(id, completed) {
  */
 export async function deleteTodo(id) {
   const { error } = await supabase.from('todos').delete().eq('id', id)
+  return { error: error ? new Error(error.message) : null }
+}
+
+/**
+ * Update priority for a todo.
+ * @param {string} id - Todo id
+ * @param {TodoPriority} priority - New priority
+ * @returns {{ error: Error | null }}
+ */
+export async function updateTodoPriority(id, priority) {
+  const validPriority = ['undefined', 'low', 'medium', 'high'].includes(priority) ? priority : 'undefined'
+  const { error } = await supabase
+    .from('todos')
+    .update({ priority: validPriority })
+    .eq('id', id)
   return { error: error ? new Error(error.message) : null }
 }

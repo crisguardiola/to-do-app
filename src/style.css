@@ -17,6 +17,12 @@
   --color-success: #16a34a;
   --color-completed: #a3a3a3;
 
+  /* ----- Priority colours (tags/dropdown) ----- */
+  --color-priority-undefined: #94a3b8;
+  --color-priority-low: #22c55e;
+  --color-priority-medium: #f59e0b;
+  --color-priority-high: #ef4444;
+
   /* ----- Spacing scale (xs → xl) ----- */
   --space-xs: 0.25rem;   /* 4px */
   --space-sm: 0.5rem;   /* 8px */
@@ -76,6 +82,10 @@
     --color-accent-hover: #60a5fa;
     --color-accent-muted: #1e3a5f;
     --color-completed: #737373;
+    --color-priority-undefined: #64748b;
+    --color-priority-low: #16a34a;
+    --color-priority-medium: #d97706;
+    --color-priority-high: #dc2626;
   }
 }
 
@@ -274,6 +284,71 @@ body {
 
 .todo-form .todo-add {
   flex-shrink: 0;
+}
+
+/* --- Priority dropdown (add form + list items) --- */
+.todo-priority-select {
+  flex-shrink: 0;
+  min-width: 6rem;
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  border-left-width: 3px;
+}
+
+.todo-priority-select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-xs);
+}
+
+.todo-priority-select.priority-undefined {
+  border-left-color: var(--color-priority-undefined);
+}
+
+.todo-priority-select.priority-low {
+  border-left-color: var(--color-priority-low);
+}
+
+.todo-priority-select.priority-medium {
+  border-left-color: var(--color-priority-medium);
+}
+
+.todo-priority-select.priority-high {
+  border-left-color: var(--color-priority-high);
+}
+
+/* --- Sort bar --- */
+.todo-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.todo-sort-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.todo-sort-select {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-body);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.todo-sort-select:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: var(--space-xs);
 }
 
 /* --- Empty state --- */

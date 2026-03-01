@@ -1,10 +1,18 @@
+/** Priority options for dropdowns: value -> label */
+export const PRIORITY_OPTIONS = [
+  { value: 'undefined', label: 'Undefined' },
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+]
+
 // --- Render list ---
 /**
  * Render the list of todos into #todo-list.
- * @param {Array} todos - List of todo items { id, text, completed, ... }
- * @param {{ onToggle: (id: string) => void, onDelete: (id: string) => void }} callbacks
+ * @param {Array} todos - List of todo items { id, text, completed, priority?, ... }
+ * @param {{ onToggle: (id: string) => void, onDelete: (id: string) => void, onPriorityChange: (id: string, priority: string) => void }} callbacks
  */
-export function renderTodos(todos, { onToggle, onDelete }) {
+export function renderTodos(todos, { onToggle, onDelete, onPriorityChange }) {
   const listEl = document.getElementById('todo-list')
   const emptyStateEl = document.getElementById('todo-empty-state')
   if (!listEl) return
@@ -13,6 +21,7 @@ export function renderTodos(todos, { onToggle, onDelete }) {
   }
   listEl.innerHTML = ''
   for (const todo of todos) {
+    const priority = todo.priority ?? 'undefined'
     const li = document.createElement('li')
     li.className = 'todo-item' + (todo.completed ? ' completed' : '')
     const checkbox = document.createElement('input')
@@ -23,6 +32,22 @@ export function renderTodos(todos, { onToggle, onDelete }) {
     const label = document.createElement('span')
     label.className = 'todo-text'
     label.textContent = todo.text
+    const prioritySelect = document.createElement('select')
+    prioritySelect.className = 'todo-priority-select priority-' + priority
+    prioritySelect.setAttribute('aria-label', 'Priority')
+    prioritySelect.title = 'Priority'
+    for (const opt of PRIORITY_OPTIONS) {
+      const option = document.createElement('option')
+      option.value = opt.value
+      option.textContent = opt.label
+      if (opt.value === priority) option.selected = true
+      prioritySelect.appendChild(option)
+    }
+    prioritySelect.addEventListener('change', () => {
+      const newPriority = prioritySelect.value
+      prioritySelect.className = 'todo-priority-select priority-' + newPriority
+      onPriorityChange(todo.id, newPriority)
+    })
     const deleteBtn = document.createElement('button')
     deleteBtn.type = 'button'
     deleteBtn.className = 'btn todo-delete'
@@ -30,6 +55,7 @@ export function renderTodos(todos, { onToggle, onDelete }) {
     deleteBtn.addEventListener('click', () => onDelete(todo.id))
     li.appendChild(checkbox)
     li.appendChild(label)
+    li.appendChild(prioritySelect)
     li.appendChild(deleteBtn)
     listEl.appendChild(li)
   }
