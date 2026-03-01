@@ -18,13 +18,8 @@ export function initChat({ addTodo, loadTodos }) {
   const form = document.getElementById('chat-form')
   const input = document.getElementById('chat-input')
   const sendBtn = document.getElementById('chat-send-btn')
-  const toggleBtn = document.getElementById('chat-toggle-btn')
 
   if (!messagesEl || !form || !input) return
-
-  toggleBtn?.addEventListener('click', () => {
-    input?.focus()
-  })
 
   function scrollToBottom() {
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight
