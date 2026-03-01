@@ -93,20 +93,59 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  flex-direction: column;
   min-width: 320px;
   min-height: 100vh;
 }
 
 #app {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: var(--space-2xl);
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Sticky top menu (login) --- */
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-topbar .auth-bar {
+  margin-top: 0;
+}
+
+/* --- Split container --- */
+.app-split {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  min-height: 0;
   width: 100%;
 }
 
-/* --- App shell --- */
+/* --- Divider between panels --- */
+.app-divider {
+  width: 4px;
+  flex-shrink: 0;
+  background: var(--color-border);
+}
+
+/* --- App shell (right panel) --- */
 .todo-app {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: var(--space-2xl);
   text-align: left;
 }
 
@@ -426,33 +465,25 @@ body {
   color: var(--color-danger);
 }
 
-/* --- Chat panel (drawer) --- */
+/* --- Chat panel (left panel, split view) --- */
 .chat-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 100%;
-  max-width: 360px;
-  height: 100vh;
-  z-index: 20;
-  background: var(--color-bg-elevated);
-  border-left: 1px solid var(--color-border);
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+  flex: 0 0 40%;
+  width: 40%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.25s ease;
-}
-
-.chat-panel--open {
-  transform: translateX(0);
+  overflow: hidden;
+  background: var(--color-bg-elevated);
 }
 
 .chat-panel-inner {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 .chat-header {
@@ -471,12 +502,9 @@ body {
   color: var(--color-text);
 }
 
-.chat-close {
-  flex-shrink: 0;
-}
-
 .chat-messages {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-lg);
   display: flex;
@@ -608,6 +636,32 @@ body {
 
 .chat-form .todo-add {
   flex-shrink: 0;
+}
+
+/* --- Mobile: stack panels vertically --- */
+@media (max-width: 767px) {
+  .app-split {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .chat-panel {
+    flex: 0 0 45vh;
+    width: 100%;
+    height: 45vh;
+  }
+
+  .app-divider {
+    width: 100%;
+    height: 1px;
+    flex-shrink: 0;
+  }
+
+  .todo-app {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
 }
 
 /* Light theme uses default :root tokens; dark theme overrides above */

@@ -8,67 +8,70 @@
   </head>
   <body>
     <div id="app">
-      <div class="todo-app">
-        <header class="todo-header">
-          <h1 class="todo-title">Todo List</h1>
-          <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
-            <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
-            <button type="button" id="chat-toggle-btn" class="btn btn-text" aria-label="Open AI assistant">AI</button>
-            <button type="button" id="auth-account-btn" class="btn btn-text auth-link" hidden>Sign in</button>
-          </div>
-        </header>
-        <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
-          <div class="auth-modal-content">
-            <h2 id="auth-modal-title" class="auth-modal-title"></h2>
-            <form id="auth-form" class="auth-form">
-              <input type="email" id="auth-email" class="todo-input" placeholder="Email" autocomplete="email" required />
-              <input type="password" id="auth-password" class="todo-input" placeholder="Password" autocomplete="current-password" minlength="6" />
-              <p id="auth-form-error" class="todo-error" hidden aria-live="polite"></p>
-              <div class="auth-form-actions">
-                <button type="submit" id="auth-submit" class="btn todo-add">Submit</button>
-                <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
-              </div>
+      <header class="app-topbar" role="banner">
+        <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
+          <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
+          <button type="button" id="auth-account-btn" class="btn btn-text auth-link" hidden>Sign in</button>
+        </div>
+      </header>
+      <div class="app-split">
+        <aside id="chat-panel" class="chat-panel" aria-label="AI assistant">
+          <div class="chat-panel-inner">
+            <header class="chat-header">
+              <h2 class="chat-title">AI Assistant</h2>
+            </header>
+            <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
+            <form id="chat-form" class="chat-form" aria-label="Send message">
+              <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
+              <button type="submit" id="chat-send-btn" class="btn todo-add">Send</button>
             </form>
-            <p id="auth-modal-switch" class="auth-modal-switch" hidden>Already have an account? <button type="button" id="auth-switch-to-signin" class="btn btn-text">Sign in</button></p>
-            <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="btn btn-text">Sign up</button></p>
           </div>
-        </div>
-        <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
-        <form id="todo-form" class="todo-form" aria-label="Add todo">
-          <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
-          <select id="todo-priority" class="todo-priority-select priority-undefined" aria-label="Priority" title="Priority">
-            <option value="undefined" selected>Undefined</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-          <button type="submit" class="btn todo-add">Add</button>
-        </form>
-        <div class="todo-sort-bar">
-          <label for="todo-sort" class="todo-sort-label">Sort by</label>
-          <select id="todo-sort" class="todo-sort-select" aria-label="Sort todos by priority">
-            <option value="default">Default order</option>
-            <option value="priority-high">Priority: High first</option>
-            <option value="priority-low">Priority: Low first</option>
-          </select>
-        </div>
-        <p id="todo-empty-state" class="todo-empty-state" hidden>No todos yet. Add one above.</p>
-        <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
-      </div>
-
-      <aside id="chat-panel" class="chat-panel" aria-label="AI assistant">
-        <div class="chat-panel-inner">
-          <header class="chat-header">
-            <h2 class="chat-title">AI Assistant</h2>
-            <button type="button" id="chat-close-btn" class="btn btn-text chat-close" aria-label="Close chat">Close</button>
+        </aside>
+        <div class="app-divider" aria-hidden="true"></div>
+        <div class="todo-app">
+          <header class="todo-header">
+            <h1 class="todo-title">Todo List</h1>
+            <button type="button" id="chat-toggle-btn" class="btn btn-text" aria-label="Open AI assistant">AI</button>
           </header>
-          <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
-          <form id="chat-form" class="chat-form" aria-label="Send message">
-            <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
-            <button type="submit" id="chat-send-btn" class="btn todo-add">Send</button>
+          <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+            <div class="auth-modal-content">
+              <h2 id="auth-modal-title" class="auth-modal-title"></h2>
+              <form id="auth-form" class="auth-form">
+                <input type="email" id="auth-email" class="todo-input" placeholder="Email" autocomplete="email" required />
+                <input type="password" id="auth-password" class="todo-input" placeholder="Password" autocomplete="current-password" minlength="6" />
+                <p id="auth-form-error" class="todo-error" hidden aria-live="polite"></p>
+                <div class="auth-form-actions">
+                  <button type="submit" id="auth-submit" class="btn todo-add">Submit</button>
+                  <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
+                </div>
+              </form>
+              <p id="auth-modal-switch" class="auth-modal-switch" hidden>Already have an account? <button type="button" id="auth-switch-to-signin" class="btn btn-text">Sign in</button></p>
+              <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="btn btn-text">Sign up</button></p>
+            </div>
+          </div>
+          <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
+          <form id="todo-form" class="todo-form" aria-label="Add todo">
+            <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
+            <select id="todo-priority" class="todo-priority-select priority-undefined" aria-label="Priority" title="Priority">
+              <option value="undefined" selected>Undefined</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <button type="submit" class="btn todo-add">Add</button>
           </form>
+          <div class="todo-sort-bar">
+            <label for="todo-sort" class="todo-sort-label">Sort by</label>
+            <select id="todo-sort" class="todo-sort-select" aria-label="Sort todos by priority">
+              <option value="default">Default order</option>
+              <option value="priority-high">Priority: High first</option>
+              <option value="priority-low">Priority: Low first</option>
+            </select>
+          </div>
+          <p id="todo-empty-state" class="todo-empty-state" hidden>No todos yet. Add one above.</p>
+          <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
         </div>
-      </aside>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

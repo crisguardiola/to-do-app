@@ -14,29 +14,17 @@ let messages = []
  * @param {{ addTodo: (text: string, priority?: string) => Promise<{ error: Error | null }>, loadTodos: () => Promise<void> }} deps
  */
 export function initChat({ addTodo, loadTodos }) {
-  const panel = document.getElementById('chat-panel')
-  const toggleBtn = document.getElementById('chat-toggle-btn')
-  const closeBtn = document.getElementById('chat-close-btn')
   const messagesEl = document.getElementById('chat-messages')
   const form = document.getElementById('chat-form')
   const input = document.getElementById('chat-input')
   const sendBtn = document.getElementById('chat-send-btn')
+  const toggleBtn = document.getElementById('chat-toggle-btn')
 
-  if (!panel || !messagesEl || !form || !input) return
-
-  function openPanel() {
-    panel?.classList.add('chat-panel--open')
-  }
-
-  function closePanel() {
-    panel?.classList.remove('chat-panel--open')
-  }
+  if (!messagesEl || !form || !input) return
 
   toggleBtn?.addEventListener('click', () => {
-    if (panel?.classList.contains('chat-panel--open')) closePanel()
-    else openPanel()
+    input?.focus()
   })
-  closeBtn?.addEventListener('click', closePanel)
 
   function scrollToBottom() {
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight
