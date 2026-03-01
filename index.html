@@ -18,12 +18,17 @@
         <aside id="chat-panel" class="chat-panel" aria-label="AI assistant">
           <div class="chat-panel-inner">
             <header class="chat-header">
-              <h2 class="chat-title">AI Assistant</h2>
+              <div class="chat-header-text">
+                <h2 class="chat-title">Hello,</h2>
+                <p class="chat-subtitle">Describe a goal or task</p>
+              </div>
             </header>
             <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
             <form id="chat-form" class="chat-form" aria-label="Send message">
-              <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
-              <button type="submit" id="chat-send-btn" class="btn todo-add">Send</button>
+              <div class="chat-input-wrap">
+                <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
+                <button type="submit" id="chat-send-btn" class="btn chat-send-btn" aria-label="Send message">Send</button>
+              </div>
             </form>
           </div>
         </aside>

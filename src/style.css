@@ -1,27 +1,63 @@
 /* --- Design tokens (edit :root and dark @media for theme) --- */
 :root {
-  /* ----- Colors (clean, minimal theme) ----- */
-  --color-bg: #efe6e2;
-  --color-bg-elevated: #d1d6d5;
-  --color-surface: #ffffff;
-  --color-border: #e5e5e5;
-  --color-border-subtle: #f0f0f0;
-  --color-text: #171717;
-  --color-text-secondary: #737373;
-  --color-text-muted: #a3a3a3;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-muted: #dbeafe;
-  --color-danger: #dc2626;
-  --color-danger-hover: #b91c1c;
-  --color-success: #16a34a;
-  --color-completed: #a3a3a3;
+  /* ----- Base palette (non-semantic) ----- */
+  --gray-0: #ffffff;
+  --gray-50: #F6F6F6;
+  --gray-100: #F6F6F6;
+  --gray-200: #e5e5e5;
+  --gray-300: #d4d4d4;
+  --gray-400: #a3a3a3;
+  --gray-500: #737373;
+  --gray-600: #525252;
+  --gray-700: #404040;
+  --gray-800: #262626;
+  --gray-900: #171717;
+  --gray-950: #0a0a0a;
 
-  /* ----- Priority colours (tags/dropdown) ----- */
-  --color-priority-undefined: #94a3b8;
-  --color-priority-low: #22c55e;
-  --color-priority-medium: #f59e0b;
-  --color-priority-high: #ef4444;
+  --brand: #BEFF00;
+  --brand-hover: #a8e600;
+  --brand-muted: #e8f5c4;
+
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  --red-700: #b91c1c;
+
+  --green-500: #22c55e;
+  --green-600: #16a34a;
+
+  --amber-500: #f59e0b;
+
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #1d4ed8;
+  --blue-950: #1e3a5f;
+
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+
+  /* ----- Semantic colors (use base palette) ----- */
+  --color-bg: var(--gray-100);
+  --color-bg-elevated: var(--gray-50);
+  --color-surface: var(--gray-0);
+  --color-border: var(--gray-200);
+  --color-border-subtle: var(--gray-50);
+  --color-text: var(--gray-900);
+  --color-text-secondary: var(--gray-700);
+  --color-text-muted: var(--gray-500);
+  --color-accent: var(--brand);
+  --color-accent-hover: var(--blue-600);
+  --color-accent-muted: var(--brand-muted);
+  --color-danger: var(--red-600);
+  --color-danger-hover: var(--red-700);
+  --color-success: var(--green-600);
+  --color-completed: var(--gray-400);
+  --color-btn-text: var(--gray-900);
+
+  /* ----- Priority (tags/dropdown) ----- */
+  --color-priority-undefined: var(--slate-400);
+  --color-priority-low: var(--green-500);
+  --color-priority-medium: var(--amber-500);
+  --color-priority-high: var(--red-500);
 
   /* ----- Spacing scale (xs → xl) ----- */
   --space-xs: 0.25rem;   /* 4px */
@@ -50,11 +86,50 @@
   --topbar-height: 3rem;
 
   /* ----- Border radius ----- */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  --radius-sm: 16px;
+  --radius-md: 24px;
+  --radius-lg: 32px;
+  --radius-xl: 32px;
   --radius-full: 9999px;
+
+  /* ----- Buttons ----- */
+  --btn-padding-y: var(--space-md);
+  --btn-padding-x: var(--space-lg);
+  --btn-border-width: 1px;
+  --btn-radius: var(--radius-md);
+  --btn-font-size: var(--font-size-base);
+  --btn-font-weight: var(--font-weight-medium);
+  --btn-font-family: var(--font-body);
+  --btn-bg: var(--color-surface);
+  --btn-color: var(--color-btn-text);
+  --btn-border-color: var(--color-border);
+  --btn-hover-border-color: var(--color-accent);
+  --btn-hover-color: var(--color-accent);
+  --btn-focus-outline: 2px solid var(--color-accent);
+  --btn-focus-outline-offset: var(--space-xs);
+  --btn-transition: border-color 0.2s, color 0.2s;
+  /* Primary (accent) button */
+  --btn-primary-bg: var(--color-accent);
+  --btn-primary-color: var(--color-bg);
+  --btn-primary-hover-filter: brightness(1.1);
+  /* Small / text button */
+  --btn-sm-padding-y: var(--space-xs);
+  --btn-sm-padding-x: var(--space-sm);
+  --btn-sm-font-size: var(--font-size-sm);
+
+  /* ----- Inputs ----- */
+  --input-padding-y: var(--space-md);
+  --input-padding-x: var(--space-lg);
+  --input-border-width: 1px;
+  --input-radius: var(--radius-md);
+  --input-font-size: var(--font-size-base);
+  --input-font-family: var(--font-body);
+  --input-bg: var(--color-surface);
+  --input-border-color: var(--color-border);
+  --input-color: var(--color-text);
+  --input-placeholder-color: var(--color-text-muted);
+  --input-focus-outline: 2px solid var(--color-accent);
+  --input-focus-outline-offset: var(--space-xs);
 
   /* Base styles using tokens */
   font-family: var(--font-body);
@@ -73,22 +148,35 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0a0a0a;
-    --color-bg-elevated: #171717;
-    --color-surface: #1a1a1a;
-    --color-border: #262626;
-    --color-border-subtle: #1f1f1f;
-    --color-text: #fafafa;
-    --color-text-secondary: #a3a3a3;
-    --color-text-muted: #737373;
-    --color-accent: #3b82f6;
-    --color-accent-hover: #60a5fa;
-    --color-accent-muted: #1e3a5f;
-    --color-completed: #737373;
-    --color-priority-undefined: #64748b;
-    --color-priority-low: #16a34a;
-    --color-priority-medium: #d97706;
-    --color-priority-high: #dc2626;
+    /* Base palette (dark) — semantic colors follow via references above */
+    --gray-0: #1a1a1a;
+    --gray-50: #171717;
+    --gray-100: #0a0a0a;
+    --gray-200: #262626;
+    --gray-300: #404040;
+    --gray-400: #737373;
+    --gray-500: #a3a3a3;
+    --gray-600: #d4d4d4;
+    --gray-700: #e5e5e5;
+    --gray-800: #f0f0f0;
+    --gray-900: #fafafa;
+    --gray-950: #ffffff;
+
+    --brand: #3b82f6;
+    --brand-hover: #60a5fa;
+    --brand-muted: #1e3a5f;
+
+    --red-500: #dc2626;
+    --red-600: #dc2626;
+    --red-700: #ef4444;
+
+    --green-500: #16a34a;
+    --green-600: #22c55e;
+
+    --amber-500: #d97706;
+
+    --slate-400: #64748b;
+    --slate-500: #94a3b8;
   }
 }
 
@@ -131,7 +219,7 @@ body {
   align-items: center;
   width: 100%;
   padding: var(--space-md) var(--space-xl);
-  background: var(--color-bg);
+  background: var(--color-bg-elevated);
   border-bottom: 1px solid var(--color-border);
   box-sizing: border-box;
 }
@@ -152,7 +240,7 @@ body {
 
 /* --- Divider between panels --- */
 .app-divider {
-  width: 4px;
+  width: 1px;
   flex-shrink: 0;
   background: var(--color-border);
 }
@@ -210,14 +298,27 @@ body {
 }
 
 .btn-text {
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--font-size-sm);
+  padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
+  font-size: var(--btn-sm-font-size);
   border-color: transparent;
   background: transparent;
 }
 
 .btn-text:hover {
   background: var(--color-border-subtle);
+}
+
+/* Sign in (top bar) — same colours as Send button */
+.auth-link.btn-text {
+  background: var(--btn-primary-bg);
+  color: var(--gray-900);
+  border: none;
+}
+
+.auth-link.btn-text:hover {
+  background: var(--btn-primary-bg);
+  color: var(--gray-900);
+  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Auth modal (only visible when not [hidden]; never show on page load) --- */
@@ -263,9 +364,22 @@ body {
 .auth-form .todo-input {
   width: 100%;
   box-sizing: border-box;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  padding: var(--input-padding-y) var(--input-padding-x);
+  font-size: var(--input-font-size);
+  font-family: var(--input-font-family);
+  background-color: var(--input-bg);
+  color: var(--input-color);
+}
+
+.auth-form .todo-input::placeholder {
+  color: var(--input-placeholder-color);
+}
+
+.auth-form .todo-input:focus {
+  outline: var(--input-focus-outline);
+  outline-offset: var(--input-focus-outline-offset);
 }
 
 .auth-form-actions {
@@ -295,47 +409,47 @@ body {
 .todo-form .todo-input {
   flex: 1;
   min-width: 0;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-family: var(--font-body);
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  padding: var(--input-padding-y) var(--input-padding-x);
+  font-size: var(--input-font-size);
+  font-family: var(--input-font-family);
+  background-color: var(--input-bg);
+  color: var(--input-color);
 }
 
 .todo-form .todo-input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--input-placeholder-color);
 }
 
 .todo-form .todo-input:focus {
-  outline: 2px solid var(--color-accent);
-  outline-offset: var(--space-xs);
+  outline: var(--input-focus-outline);
+  outline-offset: var(--input-focus-outline-offset);
 }
 
 /* --- Base button --- */
 .btn {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-body);
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  border-radius: var(--btn-radius);
+  border: var(--btn-border-width) solid var(--btn-border-color);
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  font-family: var(--btn-font-family);
+  background-color: var(--btn-bg);
+  color: var(--btn-color);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition: var(--btn-transition);
 }
 
 .btn:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+  border-color: var(--btn-hover-border-color);
+  color: var(--btn-hover-color);
 }
 
 .btn:focus,
 .btn:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: var(--space-xs);
+  outline: var(--btn-focus-outline);
+  outline-offset: var(--btn-focus-outline-offset);
 }
 
 .todo-form .todo-add {
@@ -346,20 +460,20 @@ body {
 .todo-priority-select {
   flex-shrink: 0;
   min-width: 6rem;
-  padding: var(--space-md) var(--space-lg);
+  padding: var(--input-padding-y) var(--input-padding-x);
   font-size: var(--font-size-sm);
-  font-family: var(--font-body);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background-color: var(--color-surface);
-  color: var(--color-text);
+  font-family: var(--input-font-family);
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  background-color: var(--input-bg);
+  color: var(--input-color);
   cursor: pointer;
   border-left-width: 3px;
 }
 
 .todo-priority-select:focus {
-  outline: 2px solid var(--color-accent);
-  outline-offset: var(--space-xs);
+  outline: var(--input-focus-outline);
+  outline-offset: var(--input-focus-outline-offset);
 }
 
 .todo-priority-select.priority-undefined {
@@ -471,8 +585,8 @@ body {
 
 /* --- Item: delete button --- */
 .todo-delete {
-  padding: var(--space-xs) var(--space-sm);
-  font-size: var(--font-size-sm);
+  padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
+  font-size: var(--btn-sm-font-size);
   color: var(--color-text-secondary);
   flex-shrink: 0;
 }
@@ -492,7 +606,7 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-bg-elevated);
 }
 
 .chat-panel-inner {
@@ -508,7 +622,6 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg) var(--space-xl);
-  border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
@@ -628,31 +741,59 @@ body {
 
 .chat-form {
   display: flex;
-  gap: var(--space-sm);
   padding: var(--space-lg);
-  border-top: 1px solid var(--color-border);
   flex-shrink: 0;
-  background: var(--color-bg);
+  background: var(--color-bg-elevated);
+}
+
+.chat-input-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  flex: 1;
+  min-width: 0;
+  min-height: 100px;
+  border-radius: var(--input-radius);
+  border: var(--input-border-width) solid var(--input-border-color);
+  background: var(--input-bg);
+  overflow: hidden;
+  padding-right: var(--space-sm);
+  padding-bottom: var(--space-sm);
 }
 
 .chat-input {
   flex: 1;
   min-width: 0;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--font-size-base);
-  font-family: var(--font-body);
-  background: var(--color-surface);
-  color: var(--color-text);
+  border: none;
+  padding: var(--input-padding-y) var(--input-padding-x);
+  padding-right: var(--space-xs);
+  font-size: var(--input-font-size);
+  font-family: var(--input-font-family);
+  background: transparent;
+  color: var(--input-color);
 }
 
 .chat-input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--input-placeholder-color);
 }
 
-.chat-form .todo-add {
+.chat-input:focus {
+  outline: none;
+}
+
+.chat-send-btn {
   flex-shrink: 0;
+  margin: var(--space-xs) 0;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--btn-primary-bg);
+  color: var(--gray-900);
+  font-weight: var(--font-weight-semibold);
+}
+
+.chat-send-btn:hover {
+  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Mobile: stack panels vertically --- */
