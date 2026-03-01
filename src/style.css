@@ -1,3 +1,4 @@
+/* --- Design tokens (edit :root and dark @media for theme) --- */
 :root {
   /* ----- Colors (clean, minimal theme) ----- */
   --color-bg: #ffffff;
@@ -78,6 +79,7 @@
   }
 }
 
+/* --- Layout (page, app container) --- */
 body {
   margin: 0;
   display: flex;
@@ -93,6 +95,7 @@ body {
   width: 100%;
 }
 
+/* --- App shell --- */
 .todo-app {
   text-align: left;
 }
@@ -109,12 +112,14 @@ body {
   color: var(--color-text);
 }
 
+/* --- Error message --- */
 .todo-error {
   margin: 0 0 var(--space-md);
   font-size: var(--font-size-sm);
   color: var(--color-danger);
 }
 
+/* --- Todo form & input --- */
 .todo-form {
   display: flex;
   gap: var(--space-sm);
@@ -142,8 +147,8 @@ body {
   outline-offset: var(--space-xs);
 }
 
-.todo-form .todo-add {
-  flex-shrink: 0;
+/* --- Base button --- */
+.btn {
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   padding: var(--space-md) var(--space-lg);
@@ -153,27 +158,42 @@ body {
   background-color: var(--color-surface);
   color: var(--color-text);
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, color 0.2s;
 }
 
-.todo-form .todo-add:hover {
+.btn:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
 }
 
-.todo-form .todo-add:focus,
-.todo-form .todo-add:focus-visible {
+.btn:focus,
+.btn:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: var(--space-xs);
 }
 
+.todo-form .todo-add {
+  flex-shrink: 0;
+}
+
+/* --- Empty state --- */
+.todo-empty-state {
+  margin: 0;
+  padding: var(--space-xl) 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* --- Todo list --- */
 .todo-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* ----- Todo items ----- */
+/* --- Todo list items --- */
 .todo-item {
   display: flex;
   align-items: center;
@@ -191,7 +211,7 @@ body {
   border-bottom: none;
 }
 
-/* Completion checkbox */
+/* --- Item: checkbox --- */
 .todo-item input[type="checkbox"] {
   width: 1.25em;
   height: 1.25em;
@@ -202,7 +222,7 @@ body {
   border-radius: var(--radius-sm);
 }
 
-/* Item text */
+/* --- Item: text --- */
 .todo-text {
   flex: 1;
   min-width: 0;
@@ -212,59 +232,23 @@ body {
   word-break: break-word;
 }
 
-/* Completed state: strikethrough + muted */
+/* --- Item: completed state --- */
 .todo-item.completed .todo-text {
   text-decoration: line-through;
   color: var(--color-completed);
 }
 
-/* Delete button */
+/* --- Item: delete button --- */
 .todo-delete {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-body);
-  background-color: var(--color-surface);
   color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
   flex-shrink: 0;
 }
 
 .todo-delete:hover {
   border-color: var(--color-danger);
   color: var(--color-danger);
-}
-
-.todo-delete:focus,
-.todo-delete:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: var(--space-xs);
-}
-
-button {
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  padding: var(--space-md) var(--space-xl);
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-body);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-
-button:hover {
-  border-color: var(--color-accent);
-}
-
-button:focus,
-button:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: var(--space-xs);
 }
 
 /* Light theme uses default :root tokens; dark theme overrides above */
