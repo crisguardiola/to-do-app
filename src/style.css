@@ -46,6 +46,9 @@
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
 
+  /* ----- Layout ----- */
+  --topbar-height: 3rem;
+
   /* ----- Border radius ----- */
   --radius-sm: 4px;
   --radius-md: 6px;
@@ -90,27 +93,39 @@
 }
 
 /* --- Layout (page, app container) --- */
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   margin: 0;
+  height: 100vh;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 #app {
   width: 100%;
-  min-height: 100vh;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  padding-top: var(--topbar-height);
 }
 
-/* --- Sticky top menu (login) --- */
+/* --- Fixed top menu (login) — always in viewport --- */
 .app-topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 5;
-  flex-shrink: 0;
+  min-height: var(--topbar-height);
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -118,6 +133,7 @@ body {
   padding: var(--space-md) var(--space-xl);
   background: var(--color-bg-elevated);
   border-bottom: 1px solid var(--color-border);
+  box-sizing: border-box;
 }
 
 .app-topbar .auth-bar {
@@ -131,6 +147,7 @@ body {
   flex: 1;
   min-height: 0;
   width: 100%;
+  overflow: hidden;
 }
 
 /* --- Divider between panels --- */
