@@ -11,7 +11,27 @@
       <div class="todo-app">
         <header class="todo-header">
           <h1 class="todo-title">Todo List</h1>
+          <div id="auth-bar" class="auth-bar" aria-live="polite">
+            <span id="auth-label" class="auth-label"></span>
+            <button type="button" id="auth-create-account" class="btn btn-text" hidden>Create account</button>
+            <button type="button" id="auth-sign-in" class="btn btn-text" hidden>Sign in</button>
+            <button type="button" id="auth-sign-out" class="btn btn-text" hidden>Sign out</button>
+          </div>
         </header>
+        <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+          <div class="auth-modal-content">
+            <h2 id="auth-modal-title" class="auth-modal-title"></h2>
+            <form id="auth-form" class="auth-form">
+              <input type="email" id="auth-email" class="todo-input" placeholder="Email" autocomplete="email" required />
+              <input type="password" id="auth-password" class="todo-input" placeholder="Password" autocomplete="current-password" minlength="6" />
+              <p id="auth-form-error" class="todo-error" hidden aria-live="polite"></p>
+              <div class="auth-form-actions">
+                <button type="submit" id="auth-submit" class="btn todo-add">Submit</button>
+                <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
         <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
         <form id="todo-form" class="todo-form" aria-label="Add todo">
           <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />

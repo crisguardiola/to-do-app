@@ -5,7 +5,7 @@ let todos = []
 
 // --- Fetch / get ---
 /**
- * Fetch all todos from Supabase and update internal state.
+ * Fetch all todos for the current user from Supabase and update internal state.
  * @returns {{ data: Array, error: Error | null }}
  */
 export async function fetchTodos() {
@@ -28,7 +28,7 @@ export function getTodos() {
 
 // --- Mutations (add, toggle, delete) ---
 /**
- * Insert a new todo.
+ * Insert a new todo for the current user.
  * @returns {{ error: Error | null }}
  */
 export async function addTodo(text) {
@@ -36,9 +36,13 @@ export async function addTodo(text) {
   if (!trimmed) {
     return { error: null }
   }
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return { error: new Error('Not signed in') }
+  }
   const { error } = await supabase
     .from('todos')
-    .insert({ text: trimmed, completed: false })
+    .insert({ text: trimmed, completed: false, user_id: user.id })
   return { error: error ? new Error(error.message) : null }
 }
 

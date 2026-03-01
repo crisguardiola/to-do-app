@@ -1,7 +1,16 @@
 import './style.css'
+import { ensureSession, getCurrentUser, onAuthStateChange, signUpWithEmail, signInWithEmail, signOut } from './auth.js'
 import { fetchTodos, getTodos, addTodo, toggleTodo, deleteTodo } from './data/todos.js'
 import { setError, clearError } from './ui/errors.js'
 import { renderTodos, setLoading } from './ui/dom.js'
+import {
+  renderAuthBar,
+  showCreateAccountModal,
+  showSignInModal,
+  hideAuthModal,
+  setAuthFormError,
+  wireAuthUI,
+} from './ui/auth.js'
 
 // --- Load & render ---
 async function loadTodos() {
@@ -18,6 +27,26 @@ async function loadTodos() {
     onDelete: handleDelete,
   })
 }
+
+// --- Auth: ensure session then init ---
+async function init() {
+  setLoading(true)
+  const { user, error: sessionError } = await ensureSession()
+  if (sessionError) {
+    setLoading(false)
+    setError(sessionError.message)
+    return
+  }
+  renderAuthBar(user ?? null)
+  setLoading(false)
+  await loadTodos()
+}
+
+// Re-run when auth state changes (e.g. after sign in / sign out)
+onAuthStateChange((user) => {
+  renderAuthBar(user ?? null)
+  loadTodos()
+})
 
 // --- Toggle / delete handlers ---
 async function handleToggle(id) {
@@ -63,6 +92,37 @@ form.addEventListener('submit', async (e) => {
   await loadTodos()
 })
 
+// --- Auth UI handlers ---
+async function handleCreateAccount(email, password) {
+  const { data, error } = await signUpWithEmail({ email, password })
+  if (error) {
+    setAuthFormError(error.message)
+    return
+  }
+  setAuthFormError('')
+  hideAuthModal()
+  if (data) await loadTodos()
+}
+
+async function handleSignIn(email, password) {
+  const { data, error } = await signInWithEmail({ email, password })
+  if (error) {
+    setAuthFormError(error.message)
+    return
+  }
+  setAuthFormError('')
+  hideAuthModal()
+  if (data) await loadTodos()
+}
+
+wireAuthUI({
+  onCreateAccount: () => showCreateAccountModal(handleCreateAccount),
+  onSignIn: () => showSignInModal(handleSignIn),
+  onSignOut: async () => {
+    await signOut()
+    await init()
+  },
+})
+
 // --- Init ---
-setLoading(true)
-loadTodos().finally(() => setLoading(false))
+init()
