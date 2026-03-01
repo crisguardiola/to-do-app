@@ -15,9 +15,14 @@ export const PRIORITY_OPTIONS = [
 export function renderTodos(todos, { onToggle, onDelete, onPriorityChange }) {
   const listEl = document.getElementById('todo-list')
   const emptyStateEl = document.getElementById('todo-empty-state')
+  const appEl = listEl?.closest('.todo-app')
   if (!listEl) return
+  const isEmpty = todos.length === 0
   if (emptyStateEl) {
-    emptyStateEl.hidden = todos.length > 0
+    emptyStateEl.hidden = !isEmpty
+  }
+  if (appEl) {
+    appEl.classList.toggle('todo-app--empty', isEmpty)
   }
   listEl.innerHTML = ''
   for (const todo of todos) {

@@ -5,13 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="app">
       <header class="app-topbar" role="banner">
         <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
           <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
-          <button type="button" id="auth-account-btn" class="btn btn-text auth-link" hidden>Sign in</button>
+          <button type="button" id="auth-account-btn" class="btn btn-secondary auth-link" hidden>Sign in</button>
         </div>
       </header>
       <div class="app-split">
@@ -67,6 +70,11 @@
             </div>
           </div>
           <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
+          <div id="todo-empty-state" class="todo-empty-state" hidden>
+            <p class="todo-empty-state__title">Nudge</p>
+            <p class="todo-empty-state__tagline">From idea to action, instantly</p>
+            <p class="todo-empty-state__subtitle">Start with a to do or add the chat to assist you</p>
+          </div>
           <form id="todo-form" class="todo-form" aria-label="Add todo">
             <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
             <select id="todo-priority" class="todo-priority-select priority-undefined" aria-label="Priority" title="Priority">
@@ -77,7 +85,6 @@
             </select>
             <button type="submit" class="btn todo-add">Add</button>
           </form>
-          <p id="todo-empty-state" class="todo-empty-state" hidden>No todos yet. Add one above.</p>
           <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
         </div>
       </div>
