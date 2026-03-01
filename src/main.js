@@ -11,6 +11,7 @@ import {
   setAuthFormError,
   wireAuthUI,
 } from './ui/auth.js'
+import { initChat } from './ui/chat.js'
 
 // Ensure auth popover is never shown on load—only when user clicks Sign in or Sign up
 hideAuthModal()
@@ -179,6 +180,8 @@ wireAuthUI({
     await init()
   },
 })
+
+initChat({ addTodo, loadTodos })
 
 // --- Init ---
 init()

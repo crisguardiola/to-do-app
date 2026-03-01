@@ -13,6 +13,7 @@
           <h1 class="todo-title">Todo List</h1>
           <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
             <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
+            <button type="button" id="chat-toggle-btn" class="btn btn-text" aria-label="Open AI assistant">AI</button>
             <button type="button" id="auth-account-btn" class="btn btn-text auth-link" hidden>Sign in</button>
           </div>
         </header>
@@ -54,6 +55,20 @@
         <p id="todo-empty-state" class="todo-empty-state" hidden>No todos yet. Add one above.</p>
         <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
       </div>
+
+      <aside id="chat-panel" class="chat-panel" aria-label="AI assistant">
+        <div class="chat-panel-inner">
+          <header class="chat-header">
+            <h2 class="chat-title">AI Assistant</h2>
+            <button type="button" id="chat-close-btn" class="btn btn-text chat-close" aria-label="Close chat">Close</button>
+          </header>
+          <div id="chat-messages" class="chat-messages" role="log" aria-live="polite"></div>
+          <form id="chat-form" class="chat-form" aria-label="Send message">
+            <input type="text" id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." autocomplete="off" aria-label="Your message" />
+            <button type="submit" id="chat-send-btn" class="btn todo-add">Send</button>
+          </form>
+        </div>
+      </aside>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
