@@ -31,7 +31,9 @@ exports.handler = async (event, context) => {
 
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    return jsonResponse(503, { error: 'AI service is not configured.' })
+    return jsonResponse(503, {
+      error: 'AI service is not configured. In Netlify: Site configuration → Environment variables → add GEMINI_API_KEY (get a key at https://aistudio.google.com/apikey), then redeploy.',
+    })
   }
 
   let body

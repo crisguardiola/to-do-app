@@ -49,6 +49,7 @@ If **Confirm email** is enabled in Authentication → Settings, users who choose
 
 For the AI chat to work on Netlify, set **GEMINI_API_KEY** in the site’s environment variables:
 
-1. Netlify Dashboard → your site → **Site configuration** → **Environment variables**.
-2. Add `GEMINI_API_KEY` with your Gemini API key (same as in local `.env`). Get one at [Google AI Studio](https://aistudio.google.com/apikey).
-3. Redeploy so the serverless function receives the variable.
+1. Netlify Dashboard → your site → **Site configuration** (or **Site settings**) → **Environment variables**.
+2. Click **Add a variable** or **Add environment variable** → **Add a single variable**.
+3. Set **Key** to `GEMINI_API_KEY` and **Value** to your Gemini API key (same value as in local `.env`). Get a key at [Google AI Studio](https://aistudio.google.com/apikey).
+4. Save, then trigger a **Redeploy** (Deploys → Trigger deploy) so the serverless function receives the variable.
