@@ -3,6 +3,7 @@
 const STORAGE_KEY = 'todo_ai_chat_usage'
 const DAILY_LIMIT = 10
 const FRIENDLY_ERROR = "Sorry, I couldn't process that. Please try again later."
+const BACKEND_UNREACHABLE = "Chat isn't available. Start the backend: in the project folder run `node server.js`, then reload."
 const LIMIT_MESSAGE = "Sorry, you've reached the daily limit of 10 AI requests. Try again tomorrow."
 
 /**
@@ -193,7 +194,10 @@ export function initChat({ addTodo, loadTodos }) {
       removeLoading()
 
       if (!res.ok || data.error) {
-        appendMessage({ role: 'assistant', content: data.error || FRIENDLY_ERROR })
+        const errorMsg = (res.status === 404 || res.status === 502) && !data.error
+          ? BACKEND_UNREACHABLE
+          : (data.error || FRIENDLY_ERROR)
+        appendMessage({ role: 'assistant', content: errorMsg })
       } else if (Array.isArray(data.tasks) && data.tasks.length > 0) {
         incrementUsage()
         appendMessage({ role: 'assistant', content: '', tasks: data.tasks })
@@ -202,7 +206,7 @@ export function initChat({ addTodo, loadTodos }) {
       }
     } catch (err) {
       removeLoading()
-      appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })
+      appendMessage({ role: 'assistant', content: BACKEND_UNREACHABLE })
     } finally {
       sendBtn.disabled = false
     }
