@@ -83,8 +83,10 @@ async function deleteTodo(id) {
 
 function renderTodos() {
   const listEl = document.getElementById('todo-list')
+  const emptyEl = document.getElementById('todo-empty')
   if (!listEl) return
   listEl.innerHTML = ''
+  if (emptyEl) emptyEl.hidden = todos.length > 0
   for (const todo of todos) {
     const li = document.createElement('li')
     li.className = 'todo-item' + (todo.completed ? ' completed' : '')
@@ -108,29 +110,16 @@ function renderTodos() {
   }
 }
 
-document.querySelector('#app').innerHTML = `
-  <div class="todo-app">
-    <header class="todo-header">
-      <h1 class="todo-title">Todo List</h1>
-    </header>
-    <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
-    <form id="todo-form" class="todo-form" aria-label="Add todo">
-      <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
-      <button type="submit" class="todo-add">Add</button>
-    </form>
-    <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
-  </div>
-`
-
 const form = document.getElementById('todo-form')
 const input = document.getElementById('todo-input')
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault()
-  addTodo(input.value)
-  input.value = ''
-  input.focus()
-})
+if (form && input) {
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    addTodo(input.value)
+    input.value = ''
+    input.focus()
+  })
+}
 
 setLoading(true)
 fetchTodos().finally(() => setLoading(false))
