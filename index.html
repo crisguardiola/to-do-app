@@ -42,6 +42,7 @@
         <div class="todo-app">
           <div id="auth-modal" class="auth-modal" hidden role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
             <div class="auth-modal-content">
+              <button type="button" id="auth-modal-close" class="auth-modal-close" aria-label="Close">×</button>
               <h2 id="auth-modal-title" class="auth-modal-title"></h2>
               <form id="auth-form" class="auth-form">
                 <input type="email" id="auth-email" class="todo-input" placeholder="Email" autocomplete="email" required />
@@ -58,8 +59,8 @@
                   <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
                 </div>
               </form>
-              <p id="auth-modal-switch" class="auth-modal-switch" hidden>Already have an account? <button type="button" id="auth-switch-to-signin" class="btn btn-text">Sign in</button></p>
-              <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="btn btn-text">Sign up</button></p>
+              <p id="auth-modal-switch" class="auth-modal-switch" hidden>Already have an account? <button type="button" id="auth-switch-to-signin" class="auth-modal-switch__link">Sign in</button></p>
+              <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="auth-modal-switch__link">Sign up</button></p>
             </div>
           </div>
           <div class="todo-app__scroll">

@@ -147,9 +147,11 @@ export function wireAuthUI({ onSignIn, onCreateAccount, onSignOut }) {
   const accountBtn = document.getElementById('auth-account-btn')
   const guestCtaBtn = document.getElementById('auth-guest-cta-btn')
   const cancelBtn = document.getElementById('auth-cancel')
+  const closeBtn = document.getElementById('auth-modal-close')
   const switchToCreate = document.getElementById('auth-switch-to-create')
   const switchToSignin = document.getElementById('auth-switch-to-signin')
 
+  closeBtn?.addEventListener('click', hideAuthModal)
   accountBtn?.addEventListener('click', (e) => {
     e.preventDefault()
     if (accountBtn.textContent === 'Sign out') {
