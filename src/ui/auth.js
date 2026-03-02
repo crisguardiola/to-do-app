@@ -49,6 +49,7 @@ export function showCreateAccountModal(onSubmit) {
   formError.textContent = ''
   emailEl.value = ''
   passwordEl.value = ''
+  resetPasswordVisibility()
 
   const handler = (e) => {
     e.preventDefault()
@@ -91,6 +92,7 @@ export function showSignInModal(onSubmit) {
   formError.textContent = ''
   emailEl.value = ''
   passwordEl.value = ''
+  resetPasswordVisibility()
 
   const handler = (e) => {
     e.preventDefault()
@@ -164,4 +166,36 @@ export function wireAuthUI({ onSignIn, onCreateAccount, onSignOut }) {
   switchToCreate?.addEventListener('click', () => { onCreateAccount() })
   switchToSignin?.addEventListener('click', () => { onSignIn() })
   setupAuthModalBackdrop()
+  setupPasswordToggle()
+}
+
+function resetPasswordVisibility() {
+  const passwordEl = document.getElementById('auth-password')
+  const toggleBtn = document.getElementById('auth-password-toggle')
+  const iconShow = toggleBtn?.querySelector('.auth-password-icon--show')
+  const iconHide = toggleBtn?.querySelector('.auth-password-icon--hide')
+  if (!passwordEl || !toggleBtn || !iconShow || !iconHide) return
+  passwordEl.type = 'password'
+  iconShow.hidden = false
+  iconHide.hidden = true
+  toggleBtn.setAttribute('aria-label', 'Show password')
+  toggleBtn.setAttribute('title', 'Show password')
+}
+
+function setupPasswordToggle() {
+  const passwordEl = document.getElementById('auth-password')
+  const toggleBtn = document.getElementById('auth-password-toggle')
+  const iconShow = toggleBtn?.querySelector('.auth-password-icon--show')
+  const iconHide = toggleBtn?.querySelector('.auth-password-icon--hide')
+
+  if (!passwordEl || !toggleBtn || !iconShow || !iconHide) return
+
+  toggleBtn.addEventListener('click', () => {
+    const isPassword = passwordEl.type === 'password'
+    passwordEl.type = isPassword ? 'text' : 'password'
+    iconShow.hidden = isPassword
+    iconHide.hidden = !isPassword
+    toggleBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password')
+    toggleBtn.setAttribute('title', isPassword ? 'Hide password' : 'Show password')
+  })
 }
