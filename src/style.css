@@ -474,12 +474,13 @@ body {
   width: 100%;
   box-sizing: border-box;
   border-radius: var(--input-radius);
-  border: var(--input-border-width) solid var(--input-border-color);
+  border: 2px solid var(--input-border-color);
   padding: var(--input-padding-y) var(--input-padding-x);
   font-size: var(--input-font-size);
   font-family: var(--input-font-family);
   background-color: var(--input-bg);
   color: var(--input-color);
+  transition: border-color 0.2s ease;
 }
 
 .auth-form .todo-input::placeholder {
@@ -487,8 +488,8 @@ body {
 }
 
 .auth-form .todo-input:focus {
-  outline: var(--input-focus-outline);
-  outline-offset: var(--input-focus-outline-offset);
+  outline: none;
+  border-color: var(--color-accent);
 }
 
 .auth-form-actions {
