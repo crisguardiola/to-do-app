@@ -333,9 +333,9 @@ body {
   border: none;
   background: none;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   font-family: var(--font-body);
-  color: var(--color-text-secondary, var(--gray-600));
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: color 0.15s ease;
 }
