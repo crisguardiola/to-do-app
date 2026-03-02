@@ -4,24 +4,21 @@
  * @param {{ isAnonymous: boolean, email?: string | null }} user
  */
 export function renderAuthBar(user) {
-  const signedInTextEl = document.getElementById('auth-signed-in-text')
-  const signedInMessageEl = document.getElementById('auth-signed-in-message')
   const accountBtn = document.getElementById('auth-account-btn')
+  const guestCtaEl = document.getElementById('auth-guest-cta')
+  const guestCtaBtn = document.getElementById('auth-guest-cta-btn')
 
   if (!accountBtn) return
 
   if (!user || user.is_anonymous) {
-    if (signedInMessageEl && signedInTextEl) {
-      signedInMessageEl.hidden = false
-      signedInTextEl.textContent = 'Using app as guest'
+    if (guestCtaEl && guestCtaBtn) {
+      guestCtaEl.hidden = false
+      guestCtaBtn.textContent = 'Using app as guest'
     }
     accountBtn.textContent = 'Sign in'
     accountBtn.hidden = false
   } else {
-    if (signedInMessageEl && signedInTextEl) {
-      signedInMessageEl.hidden = false
-      signedInTextEl.textContent = user.email ? `Signed in as ${user.email}` : 'Signed in'
-    }
+    if (guestCtaEl) guestCtaEl.hidden = true
     accountBtn.textContent = 'Sign out'
     accountBtn.hidden = false
   }
@@ -146,6 +143,7 @@ export function setAuthFormError(message) {
  */
 export function wireAuthUI({ onSignIn, onCreateAccount, onSignOut }) {
   const accountBtn = document.getElementById('auth-account-btn')
+  const guestCtaBtn = document.getElementById('auth-guest-cta-btn')
   const cancelBtn = document.getElementById('auth-cancel')
   const switchToCreate = document.getElementById('auth-switch-to-create')
   const switchToSignin = document.getElementById('auth-switch-to-signin')
@@ -157,6 +155,10 @@ export function wireAuthUI({ onSignIn, onCreateAccount, onSignOut }) {
     } else {
       onSignIn()
     }
+  })
+  guestCtaBtn?.addEventListener('click', (e) => {
+    e.preventDefault()
+    onSignIn()
   })
   cancelBtn?.addEventListener('click', hideAuthModal)
   switchToCreate?.addEventListener('click', () => { onCreateAccount() })

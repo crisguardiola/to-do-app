@@ -16,9 +16,20 @@ import { initChat } from './ui/chat.js'
 // Ensure auth popover is never shown on load—only when user clicks Sign in or Sign up
 hideAuthModal()
 
-// --- Sort by priority (order: high=0, medium=1, low=2, undefined=3) ---
+// --- Sort state: 'default' | 'list' | 'priority'; list/priority use asc/desc ---
+let sortBy = 'default'
+let sortDirection = 'asc' // for list: asc = A→Z, desc = Z→A; for priority: asc = High→Low, desc = Low→High
+
 const PRIORITY_ORDER = { high: 0, medium: 1, low: 2, undefined: 3 }
-const MEDIUM_FIRST_ORDER = { medium: 0, high: 1, low: 2, undefined: 3 }
+
+function sortTodosByList(todos, asc) {
+  return [...todos].sort((a, b) => {
+    const ta = (a.text ?? '').toLowerCase()
+    const tb = (b.text ?? '').toLowerCase()
+    const cmp = ta.localeCompare(tb)
+    return asc ? cmp : -cmp
+  })
+}
 
 function sortTodosByPriority(todos, highFirst = true) {
   return [...todos].sort((a, b) => {
@@ -28,29 +39,55 @@ function sortTodosByPriority(todos, highFirst = true) {
   })
 }
 
-function sortTodosByMediumFirst(todos) {
-  return [...todos].sort((a, b) => {
-    const pA = MEDIUM_FIRST_ORDER[a.priority ?? 'undefined'] ?? 3
-    const pB = MEDIUM_FIRST_ORDER[b.priority ?? 'undefined'] ?? 3
-    return pA - pB
-  })
-}
-
 function getSortedTodos(data) {
-  const sortEl = document.getElementById('todo-sort')
-  const sortBy = sortEl?.value ?? 'default'
-  if (sortBy === 'priority-high') return sortTodosByPriority(data, true)
-  if (sortBy === 'priority-medium') return sortTodosByMediumFirst(data)
-  if (sortBy === 'priority-low') return sortTodosByPriority(data, false)
+  if (sortBy === 'list') return sortTodosByList(data, sortDirection === 'asc')
+  if (sortBy === 'priority') return sortTodosByPriority(data, sortDirection === 'asc')
   return data
 }
 
+function updateSortArrows() {
+  const listBtn = document.getElementById('todo-sort-list')
+  const priorityBtn = document.getElementById('todo-sort-priority')
+  const listArrow = document.getElementById('todo-sort-list-arrow')
+  const priorityArrow = document.getElementById('todo-sort-priority-arrow')
+  if (listArrow) {
+    listArrow.textContent = sortBy === 'list' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'
+  }
+  if (listBtn) {
+    listBtn.setAttribute('aria-label', sortBy === 'list' ? (sortDirection === 'asc' ? 'Sorted A→Z, click to reverse' : 'Sorted Z→A, click to reverse') : 'Sort by list name')
+  }
+  if (priorityArrow) {
+    priorityArrow.textContent = sortBy === 'priority' ? (sortDirection === 'asc' ? '↑' : '↓') : '↕'
+  }
+  if (priorityBtn) {
+    priorityBtn.setAttribute('aria-label', sortBy === 'priority' ? (sortDirection === 'asc' ? 'High first, click to reverse' : 'Low first, click to reverse') : 'Sort by priority')
+  }
+}
+
+function updateSelectAllCheckbox(todos) {
+  const selectAllEl = document.getElementById('todo-select-all')
+  if (!selectAllEl) return
+  if (todos.length === 0) {
+    selectAllEl.checked = false
+    selectAllEl.indeterminate = false
+    selectAllEl.disabled = true
+    return
+  }
+  selectAllEl.disabled = false
+  const completedCount = todos.filter((t) => t.completed).length
+  selectAllEl.checked = completedCount === todos.length
+  selectAllEl.indeterminate = completedCount > 0 && completedCount < todos.length
+}
+
 function renderTodosWithSort(todos) {
-  renderTodos(getSortedTodos(todos), {
+  const sorted = getSortedTodos(todos)
+  renderTodos(sorted, {
     onToggle: handleToggle,
     onDelete: handleDelete,
     onPriorityChange: handlePriorityChange,
   })
+  updateSortArrows()
+  updateSelectAllCheckbox(todos)
 }
 
 // --- Load & render ---
@@ -160,38 +197,50 @@ if (priorityTag && priorityDropdown) {
   })
 }
 
-// Sort tag dropdown: same UI as priority tag
-const sortSelect = document.getElementById('todo-sort') // hidden input
-const sortTag = document.getElementById('todo-sort-tag')
-const sortDropdown = document.getElementById('todo-sort-dropdown')
-const SORT_LABELS = { default: 'Default order', 'priority-high': 'High first', 'priority-medium': 'Medium first', 'priority-low': 'Low first' }
-if (sortTag && sortDropdown && sortSelect) {
-  sortTag.addEventListener('click', (e) => {
-    e.stopPropagation()
-    const open = !sortDropdown.hidden
-    sortDropdown.hidden = open
-    sortTag.setAttribute('aria-expanded', String(!open))
-    if (!sortDropdown.hidden) {
-      const close = () => {
-        sortDropdown.hidden = true
-        sortTag.setAttribute('aria-expanded', 'false')
-        document.removeEventListener('click', close)
-      }
-      setTimeout(() => document.addEventListener('click', close), 0)
+// Header sort buttons: Your list (A↔Z) and Priority (High↔Low); clicking active arrow reverses direction
+const sortListBtn = document.getElementById('todo-sort-list')
+const sortPriorityBtn = document.getElementById('todo-sort-priority')
+if (sortListBtn) {
+  sortListBtn.addEventListener('click', () => {
+    if (sortBy === 'list') {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortBy = 'list'
+      sortDirection = 'asc'
     }
+    renderTodosWithSort(getTodos())
   })
-  const SORT_CLASSES = { default: 'todo-sort-tag--default', 'priority-high': 'todo-sort-tag--priority-high', 'priority-medium': 'todo-sort-tag--priority-medium', 'priority-low': 'todo-sort-tag--priority-low' }
-  sortDropdown.querySelectorAll('[data-value]').forEach((opt) => {
-    opt.addEventListener('click', (e) => {
-      e.stopPropagation()
-      const value = opt.dataset.value
-      sortSelect.value = value
-      sortTag.textContent = SORT_LABELS[value]
-      sortTag.className = 'todo-sort-tag ' + (SORT_CLASSES[value] || SORT_CLASSES.default)
-      sortDropdown.hidden = true
-      sortTag.setAttribute('aria-expanded', 'false')
-      renderTodosWithSort(getTodos())
-    })
+}
+if (sortPriorityBtn) {
+  sortPriorityBtn.addEventListener('click', () => {
+    if (sortBy === 'priority') {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc'
+    } else {
+      sortBy = 'priority'
+      sortDirection = 'asc'
+    }
+    renderTodosWithSort(getTodos())
+  })
+}
+
+// Select-all checkbox: toggle all todos completed/incomplete
+const selectAllEl = document.getElementById('todo-select-all')
+if (selectAllEl) {
+  selectAllEl.addEventListener('change', async () => {
+    const todos = getTodos()
+    if (todos.length === 0) return
+    const allCompleted = todos.every((t) => t.completed)
+    const targetCompleted = !allCompleted
+    clearError()
+    setLoading(true)
+    const results = await Promise.all(todos.map((t) => toggleTodo(t.id, targetCompleted)))
+    setLoading(false)
+    const err = results.find((r) => r.error)
+    if (err) {
+      setError(err.message)
+      return
+    }
+    await loadTodos()
   })
 }
 

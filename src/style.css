@@ -83,7 +83,7 @@
   --font-weight-semibold: 600;
 
   /* ----- Layout ----- */
-  --topbar-height: 3rem;
+  --topbar-height: 2.25rem;
 
   /* ----- Border radius ----- */
   --radius-sm: 16px;
@@ -222,7 +222,7 @@ body {
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  padding: var(--space-md) var(--space-xl);
+  padding: var(--space-sm) var(--space-xl);
   background: var(--color-bg-elevated);
   border-bottom: 1px solid var(--color-border);
   box-sizing: border-box;
@@ -253,10 +253,19 @@ body {
 .todo-app {
   flex: 1;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+}
+
+.todo-app__scroll {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: var(--space-2xl);
   padding-top: calc(var(--space-2xl) + var(--space-xl));
-  text-align: left;
 }
 
 .todo-app--empty .todo-header {
@@ -267,21 +276,86 @@ body {
   display: none;
 }
 
+/* --- Todo table header (Airtable-style sticky row) --- */
 .todo-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  margin-bottom: var(--space-xl);
-  padding: var(--space-2xl) 42px 0;
+  gap: var(--space-md);
+  padding: var(--space-sm) 42px;
+  margin: 0 0 var(--space-md);
+  background: var(--color-bg-elevated);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
-.todo-title {
+.todo-header__cell {
+  display: flex;
+  align-items: center;
+}
+
+.todo-header__cell--checkbox {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+  justify-content: flex-start;
+}
+
+.todo-header__cell--list {
+  flex: 1;
+  min-width: 0;
+}
+
+.todo-header__cell--priority {
+  flex-shrink: 0;
+}
+
+.todo-header__cell--spacer {
+  width: 4.5rem;
+  flex-shrink: 0;
+}
+
+.todo-header__select-all {
+  width: 1.25em;
+  height: 1.25em;
   margin: 0;
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text);
+  cursor: pointer;
+  accent-color: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+.todo-header__sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-body);
+  color: var(--color-text-secondary, var(--gray-600));
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.todo-header__sort-btn:hover {
+  color: var(--color-text, var(--gray-900));
+}
+
+.todo-header__label {
+  font-size: var(--font-size-sm);
+  color: inherit;
+}
+
+.todo-header__arrow {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+
+.todo-header__sort-btn:hover .todo-header__arrow {
+  opacity: 1;
 }
 
 /* --- Auth bar (minimal: single "Sign in" link when guest, email + Sign out when signed in) --- */
@@ -296,13 +370,6 @@ body {
 .auth-link {
   margin-left: auto;
 }
-
-.auth-signed-in-message {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
 
 .auth-modal-switch {
   margin-top: var(--space-md);
@@ -408,6 +475,33 @@ body {
 
 .auth-form-actions .btn {
   flex: 1;
+}
+
+/* --- Guest CTA (todo-app: "Using app as guest" → tap to sign in) --- */
+.auth-guest-cta {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-2xl) 32px;
+  background: var(--color-bg);
+}
+
+.auth-guest-cta__btn {
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  font-family: var(--font-body);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  background: var(--btn-primary-bg);
+  color: var(--gray-900);
+}
+
+.auth-guest-cta__btn:hover {
+  background: var(--btn-primary-bg);
+  color: var(--gray-900);
+  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Error message --- */
@@ -825,6 +919,7 @@ body {
 
 /* --- Todo list --- */
 .todo-list {
+  display: block;
   list-style: none;
   padding: 0 42px;
   margin: 0;
@@ -835,9 +930,10 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  padding: var(--space-md) 0;
+  padding: var(--space-xs) 0;
   border-bottom: 1px solid var(--gray-200);
   min-height: 2.5rem;
+  flex-shrink: 0;
 }
 
 .todo-item:first-child {
@@ -1156,7 +1252,6 @@ body {
   .todo-app {
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
   }
 }
 

@@ -13,7 +13,6 @@
     <div id="app">
       <header class="app-topbar" role="banner">
         <div id="auth-bar" class="auth-bar auth-bar--minimal" aria-live="polite">
-          <p id="auth-signed-in-message" class="auth-signed-in-message" hidden aria-live="polite"><span id="auth-signed-in-text"></span></p>
           <button type="button" id="auth-account-btn" class="btn btn-secondary auth-link" hidden>Sign in</button>
         </div>
       </header>
@@ -58,6 +57,7 @@
               <p id="auth-modal-switch-signin" class="auth-modal-switch" hidden>No account? <button type="button" id="auth-switch-to-create" class="btn btn-text">Sign up</button></p>
             </div>
           </div>
+          <div class="todo-app__scroll">
           <p id="todo-error" class="todo-error" hidden aria-live="polite"></p>
           <div id="todo-empty-state" class="todo-empty-state" hidden>
             <p class="todo-empty-state__title">Nudge</p>
@@ -79,23 +79,29 @@
             <input type="hidden" id="todo-priority" name="priority" value="undefined" />
             <button type="submit" class="btn todo-add">Add</button>
           </form>
-          <header class="todo-header">
-            <h1 class="todo-title">Your List</h1>
-            <div class="todo-sort-bar">
-              <span class="todo-sort-label">Sort by</span>
-              <div class="todo-sort-tag-wrap">
-                <button type="button" class="todo-sort-tag todo-sort-tag--default" id="todo-sort-tag" aria-label="Sort order" aria-haspopup="listbox" aria-expanded="false">Default order</button>
-                <div class="todo-sort-dropdown" id="todo-sort-dropdown" role="listbox" aria-label="Sort order" hidden>
-                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--default" data-value="default">Default order</button>
-                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-high" data-value="priority-high">High first</button>
-                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-medium" data-value="priority-medium">Medium first</button>
-                  <button type="button" role="option" class="todo-sort-tag-option todo-sort-tag-option--priority-low" data-value="priority-low">Low first</button>
-                </div>
-              </div>
-              <input type="hidden" id="todo-sort" value="default" />
+          <header class="todo-header" role="row">
+            <div class="todo-header__cell todo-header__cell--checkbox">
+              <input type="checkbox" id="todo-select-all" class="todo-header__select-all" aria-label="Select or deselect all todos" />
             </div>
+            <div class="todo-header__cell todo-header__cell--list">
+              <button type="button" class="todo-header__sort-btn" id="todo-sort-list" aria-label="Sort by list name">
+                <span class="todo-header__label">Your list</span>
+                <span class="todo-header__arrow" id="todo-sort-list-arrow" aria-hidden="true">↕</span>
+              </button>
+            </div>
+            <div class="todo-header__cell todo-header__cell--priority">
+              <button type="button" class="todo-header__sort-btn" id="todo-sort-priority" aria-label="Sort by priority">
+                <span class="todo-header__label">Priority</span>
+                <span class="todo-header__arrow" id="todo-sort-priority-arrow" aria-hidden="true">↕</span>
+              </button>
+            </div>
+            <div class="todo-header__cell todo-header__cell--spacer" aria-hidden="true"></div>
           </header>
           <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
+          </div>
+          <div id="auth-guest-cta" class="auth-guest-cta" hidden>
+            <button type="button" id="auth-guest-cta-btn" class="btn auth-guest-cta__btn" aria-label="Sign in to save your list">Using app as guest</button>
+          </div>
         </div>
       </div>
     </div>
