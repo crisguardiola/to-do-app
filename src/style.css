@@ -1232,7 +1232,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  padding: var(--space-sm) 0;
+  padding: 0 0 var(--space-sm) 0;
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
