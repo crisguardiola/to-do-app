@@ -177,6 +177,8 @@ export function initChat({ addTodo, loadTodos, getTodos, deleteTodo }) {
               if (!error) {
                 addBtn.classList.add('chat-add-btn--added')
                 addBtn.textContent = 'Added'
+                li.classList.add('chat-suggestion-item--just-added')
+                setTimeout(() => li.classList.remove('chat-suggestion-item--just-added'), 500)
                 await loadTodos()
               }
             }

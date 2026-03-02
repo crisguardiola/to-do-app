@@ -6,6 +6,9 @@ export const PRIORITY_OPTIONS = [
   { value: 'high', label: 'High' },
 ]
 
+/** @type {Set<string>} - Track todo IDs from previous render for animate-in */
+let previousTodoIds = new Set()
+
 // --- Render list ---
 /**
  * Render the list of todos into #todo-list.
@@ -38,11 +41,15 @@ export function renderTodos(todos, { onToggle, onDelete, onPriorityChange }) {
   if (appEl) {
     appEl.classList.toggle('todo-app--empty', isEmpty)
   }
+  const currentIds = new Set(todos.map((t) => t.id))
+  const newIds = previousTodoIds.size > 0 ? [...currentIds].filter((id) => !previousTodoIds.has(id)) : []
+  previousTodoIds = currentIds
+
   listEl.innerHTML = ''
   for (const todo of todos) {
     const priority = todo.priority ?? 'undefined'
     const li = document.createElement('li')
-    li.className = 'todo-item' + (todo.completed ? ' completed' : '')
+    li.className = 'todo-item' + (todo.completed ? ' completed' : '') + (newIds.includes(todo.id) ? ' todo-item--animate-in' : '')
     const checkbox = document.createElement('input')
     checkbox.type = 'checkbox'
     checkbox.checked = todo.completed
