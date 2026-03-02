@@ -59,6 +59,19 @@
   --color-priority-medium: var(--amber-500);
   --color-priority-high: var(--red-500);
 
+  /* ----- Tag pills: background (15% opacity) + text (solid) ----- */
+  --tag-bg-default: rgb(from var(--gray-500) r g b / 0.15);
+  --tag-text-default: var(--gray-500);
+  --tag-bg-undefined: rgb(from var(--slate-400) r g b / 0.15);
+  --tag-text-undefined: var(--slate-400);
+  --tag-bg-low: rgb(from var(--green-500) r g b / 0.15);
+  --tag-text-low: var(--green-500);
+  --tag-bg-medium: rgb(from var(--amber-500) r g b / 0.15);
+  --tag-text-medium: var(--amber-500);
+  --tag-bg-high: rgb(from var(--red-500) r g b / 0.15);
+  --tag-text-high: var(--red-500);
+  --tag-font-weight: var(--font-weight-semibold);
+
   /* ----- Spacing scale (xs → xl) ----- */
   --space-xs: 0.5rem;   /* 4px */
   --space-sm: 0.75rem;   /* 8px */
@@ -586,14 +599,14 @@ body {
   align-items: center;
   padding: 0.25rem 0.5rem;
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--tag-font-weight);
   font-family: var(--input-font-family);
   line-height: 1.25;
   border: none;
   border-radius: var(--radius-full);
   cursor: pointer;
-  background-color: var(--gray-500);
-  color: var(--gray-0);
+  background-color: var(--tag-bg-default);
+  color: var(--tag-text-default);
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
@@ -603,18 +616,18 @@ body {
 }
 
 .todo-priority-tag--low {
-  background-color: var(--color-priority-low);
-  color: var(--gray-0);
+  background-color: var(--tag-bg-low);
+  color: var(--tag-text-low);
 }
 
 .todo-priority-tag--medium {
-  background-color: var(--color-priority-medium);
-  color: var(--gray-0);
+  background-color: var(--tag-bg-medium);
+  color: var(--tag-text-medium);
 }
 
 .todo-priority-tag--high {
-  background-color: var(--color-priority-high);
-  color: var(--gray-0);
+  background-color: var(--tag-bg-high);
+  color: var(--tag-text-high);
 }
 
 /* Dropdown: tag options */
@@ -644,13 +657,12 @@ body {
   width: 100%;
   padding: 0.35rem 0.6rem;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--tag-font-weight);
   font-family: var(--input-font-family);
   text-align: left;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  color: var(--gray-0);
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
@@ -660,15 +672,18 @@ body {
 }
 
 .todo-priority-tag-option--low {
-  background-color: var(--color-priority-low);
+  background-color: var(--tag-bg-low);
+  color: var(--tag-text-low);
 }
 
 .todo-priority-tag-option--medium {
-  background-color: var(--color-priority-medium);
+  background-color: var(--tag-bg-medium);
+  color: var(--tag-text-medium);
 }
 
 .todo-priority-tag-option--high {
-  background-color: var(--color-priority-high);
+  background-color: var(--tag-bg-high);
+  color: var(--tag-text-high);
 }
 
 /* --- Base button --- */
@@ -751,19 +766,19 @@ body {
   align-items: center;
   padding: 0.25rem 0.5rem;
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--tag-font-weight);
   font-family: var(--font-body);
   line-height: 1.25;
   border: none;
   border-radius: var(--radius-full);
   cursor: pointer;
-  color: var(--gray-0);
   white-space: nowrap;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .todo-sort-tag--default {
-  background-color: var(--color-priority-undefined);
+  background-color: var(--tag-bg-undefined);
+  color: var(--tag-text-undefined);
 }
 
 .todo-sort-tag--default:hover {
@@ -771,15 +786,18 @@ body {
 }
 
 .todo-sort-tag--priority-high {
-  background-color: var(--color-priority-high);
+  background-color: var(--tag-bg-high);
+  color: var(--tag-text-high);
 }
 
 .todo-sort-tag--priority-medium {
-  background-color: var(--color-priority-medium);
+  background-color: var(--tag-bg-medium);
+  color: var(--tag-text-medium);
 }
 
 .todo-sort-tag--priority-low {
-  background-color: var(--color-priority-low);
+  background-color: var(--tag-bg-low);
+  color: var(--tag-text-low);
 }
 
 .todo-sort-dropdown {
@@ -808,30 +826,33 @@ body {
   width: 100%;
   padding: 0.35rem 0.6rem;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--tag-font-weight);
   font-family: var(--font-body);
   text-align: left;
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  color: var(--gray-0);
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .todo-sort-tag-option--default {
-  background-color: var(--color-priority-undefined);
+  background-color: var(--tag-bg-undefined);
+  color: var(--tag-text-undefined);
 }
 
 .todo-sort-tag-option--priority-high {
-  background-color: var(--color-priority-high);
+  background-color: var(--tag-bg-high);
+  color: var(--tag-text-high);
 }
 
 .todo-sort-tag-option--priority-medium {
-  background-color: var(--color-priority-medium);
+  background-color: var(--tag-bg-medium);
+  color: var(--tag-text-medium);
 }
 
 .todo-sort-tag-option--priority-low {
-  background-color: var(--color-priority-low);
+  background-color: var(--tag-bg-low);
+  color: var(--tag-text-low);
 }
 
 .todo-sort-tag-option:hover {
