@@ -579,6 +579,10 @@ body {
 }
 
 /* --- Guest CTA (todo-app: "Using app as guest" → tap to sign in) --- */
+.auth-guest-cta[hidden] {
+  display: none !important;
+}
+
 .auth-guest-cta {
   flex-shrink: 0;
   display: flex;
