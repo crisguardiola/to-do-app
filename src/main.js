@@ -301,7 +301,7 @@ wireAuthUI({
   },
 })
 
-initChat({ addTodo, loadTodos })
+initChat({ addTodo, loadTodos, getTodos, deleteTodo })
 
 // --- Init ---
 init()

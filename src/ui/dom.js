@@ -107,7 +107,7 @@ export function renderTodos(todos, { onToggle, onDelete, onPriorityChange }) {
     priorityWrap.appendChild(priorityDropdown)
     const deleteBtn = document.createElement('button')
     deleteBtn.type = 'button'
-    deleteBtn.className = 'btn todo-delete'
+    deleteBtn.className = 'btn button-secondaryS button-secondaryS--error todo-delete'
     deleteBtn.textContent = 'Delete'
     deleteBtn.addEventListener('click', () => onDelete(todo.id))
     li.appendChild(checkbox)

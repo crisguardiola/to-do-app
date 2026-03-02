@@ -33,7 +33,7 @@
             <form id="chat-form" class="chat-form" aria-label="Send message">
               <div class="chat-input-wrap">
                 <textarea id="chat-input" class="todo-input chat-input" placeholder="Describe a goal or task..." aria-label="Your message" rows="1"></textarea>
-                <button type="submit" id="chat-send-btn" class="btn chat-send-btn" aria-label="Send message">Send</button>
+                <button type="submit" id="chat-send-btn" class="btn button-primaryS chat-send-btn" aria-label="Send message">Send</button>
               </div>
             </form>
           </div>
@@ -48,7 +48,7 @@
                 <input type="password" id="auth-password" class="todo-input" placeholder="Password" autocomplete="current-password" minlength="6" />
                 <p id="auth-form-error" class="todo-error" hidden aria-live="polite"></p>
                 <div class="auth-form-actions">
-                  <button type="submit" id="auth-submit" class="btn todo-add">Submit</button>
+                  <button type="submit" id="auth-submit" class="btn button-primaryS todo-add">Submit</button>
                   <button type="button" id="auth-cancel" class="btn btn-text">Cancel</button>
                 </div>
               </form>
@@ -76,7 +76,7 @@
               <input type="text" id="todo-input" class="todo-input" placeholder="What do you need to do?" autocomplete="off" aria-label="Todo description" />
             </div>
             <input type="hidden" id="todo-priority" name="priority" value="undefined" />
-            <button type="submit" class="btn todo-add">Add</button>
+            <button type="submit" class="btn button-primary todo-add">Add</button>
           </form>
           <header class="todo-header" role="row">
             <div class="todo-header__cell todo-header__cell--checkbox">
@@ -99,7 +99,7 @@
           <ul id="todo-list" class="todo-list" aria-label="Todo items"></ul>
           </div>
           <div id="auth-guest-cta" class="auth-guest-cta" hidden>
-            <button type="button" id="auth-guest-cta-btn" class="btn auth-guest-cta__btn" aria-label="Sign in to save your list">Using app as guest</button>
+            <button type="button" id="auth-guest-cta-btn" class="btn button-primary auth-guest-cta__btn" aria-label="Sign in to save your list">Using app as guest</button>
           </div>
         </div>
       </div>

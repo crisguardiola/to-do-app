@@ -126,12 +126,18 @@
   --btn-transition: border-color 0.2s, color 0.2s;
   /* Primary (accent) button */
   --btn-primary-bg: var(--color-accent);
-  --btn-primary-color: var(--color-bg);
-  --btn-primary-hover-filter: brightness(1.1);
+  --btn-primary-color: var(--gray-900);
+  --btn-primary-hover-bg: var(--brand-hover);
   /* Secondary button */
   --btn-secondary-bg: var(--gray-50);
   --btn-secondary-color: var(--color-text);
   --btn-secondary-border-color: var(--color-accent);
+  --btn-secondary-hover-bg: var(--brand-hover);
+  /* Secondary error (destructive) */
+  --btn-secondary-error-border-color: var(--color-danger);
+  --btn-secondary-error-color: var(--color-danger);
+  --btn-secondary-error-hover-bg: var(--color-danger);
+  --btn-secondary-error-hover-color: var(--gray-0);
   /* Small / text button */
   --btn-sm-padding-y: var(--space-xs);
   --btn-sm-padding-x: var(--space-sm);
@@ -420,9 +426,8 @@ body {
 }
 
 .auth-link.btn-text:hover {
-  background: var(--btn-primary-bg);
+  background: var(--btn-primary-hover-bg);
   color: var(--gray-900);
-  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Auth modal (only visible when not [hidden]; never show on page load) --- */
@@ -508,19 +513,6 @@ body {
 .auth-guest-cta__btn {
   padding: var(--btn-padding-y) var(--btn-padding-x);
   font-size: var(--btn-font-size);
-  font-weight: var(--btn-font-weight);
-  font-family: var(--font-body);
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
-}
-
-.auth-guest-cta__btn:hover {
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
-  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Error message --- */
@@ -713,35 +705,72 @@ body {
 
 .btn:focus,
 .btn:focus-visible {
-  outline: var(--btn-focus-outline);
-  outline-offset: var(--btn-focus-outline-offset);
+  outline: none;
 }
 
 /* Secondary button */
-.btn-secondary {
+.btn-secondary,
+.button-secondary,
+.button-secondaryS {
   background-color: var(--btn-secondary-bg);
   color: var(--btn-secondary-color);
   border: 2px solid var(--btn-secondary-border-color);
+  transition: var(--btn-transition), background-color 0.2s;
 }
 
-.btn-secondary:hover {
-  border-color: var(--btn-hover-border-color);
-  color: var(--btn-hover-color);
+.btn-secondary:hover,
+.button-secondary:hover,
+.button-secondaryS:hover {
+  background-color: var(--btn-secondary-hover-bg);
+  border-color: transparent;
+  color: var(--btn-secondary-color);
 }
 
-/* Add / Submit — same look as Sign in (btn-text + primary) */
-.todo-add {
+/* Secondary small — compact size */
+.button-secondaryS {
   padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
   font-size: var(--btn-sm-font-size);
-  border: none;
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
+  background-color: transparent;
 }
 
-.todo-add:hover {
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
-  filter: var(--btn-primary-hover-filter);
+/* Secondary error (destructive, e.g. delete) */
+.button-secondaryS--error {
+  border-color: var(--btn-secondary-error-border-color);
+  color: var(--btn-secondary-error-color);
+}
+
+.button-secondaryS--error:hover {
+  background-color: var(--btn-secondary-error-hover-bg);
+  border-color: transparent;
+  color: var(--btn-secondary-error-hover-color);
+}
+
+
+/* Primary button (main actions: Add, Submit, Send, Guest CTA) */
+.button-primary,
+.button-primaryS {
+  border: none;
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-color);
+  transition: var(--btn-transition), background-color 0.2s;
+}
+
+.button-primary:hover,
+.button-primaryS:hover {
+  background-color: var(--btn-primary-hover-bg);
+  color: var(--btn-primary-color);
+}
+
+.button-primary:disabled,
+.button-primaryS:disabled {
+  background-color: var(--gray-200);
+  color: var(--gray-400);
+}
+
+/* Primary small — compact size */
+.button-primaryS {
+  padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
+  font-size: var(--btn-sm-font-size);
 }
 
 .todo-form .todo-add {
@@ -1018,15 +1047,7 @@ body {
 
 /* --- Item: delete button --- */
 .todo-delete {
-  padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
-  font-size: var(--btn-sm-font-size);
-  color: var(--color-text-secondary);
   flex-shrink: 0;
-}
-
-.todo-delete:hover {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
 }
 
 /* --- Chat panel (left panel, split view) --- */
@@ -1253,9 +1274,16 @@ body {
   font-size: var(--font-size-sm);
 }
 
-.chat-add-btn:disabled {
-  opacity: 0.6;
-  cursor: default;
+/* Chat add — active/added state */
+.chat-add-btn--added {
+  background-color: rgb(from var(--brand-hover) r g b / 0.2);
+  border-color: transparent;
+  color: var(--green-600);
+}
+
+.chat-add-btn--added::before {
+  content: "✓ ";
+  font-weight: var(--font-weight-semibold);
 }
 
 /* Typing indicator (loading) --- */
@@ -1401,23 +1429,12 @@ body {
   outline: none;
 }
 
-/* Send — same look as Sign in (btn-text + primary) */
+/* Send — primary, compact size */
 .chat-send-btn {
   flex-shrink: 0;
   margin: 0;
   padding: var(--btn-sm-padding-y) var(--btn-sm-padding-x);
   font-size: var(--btn-sm-font-size);
-  border-radius: var(--btn-radius);
-  border: none;
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
-  font-weight: var(--btn-font-weight);
-}
-
-.chat-send-btn:hover {
-  background: var(--btn-primary-bg);
-  color: var(--gray-900);
-  filter: var(--btn-primary-hover-filter);
 }
 
 /* --- Mobile: stack panels vertically --- */

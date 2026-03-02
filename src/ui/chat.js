@@ -11,9 +11,9 @@ const BACKEND_UNREACHABLE = "Chat isn't available. Start the backend: in the pro
 let messages = []
 
 /**
- * @param {{ addTodo: (text: string, priority?: string) => Promise<{ error: Error | null }>, loadTodos: () => Promise<void> }} deps
+ * @param {{ addTodo: (text: string, priority?: string) => Promise<{ error: Error | null }>, loadTodos: () => Promise<void>, getTodos: () => Array, deleteTodo: (id: string) => Promise<{ error: Error | null }> }} deps
  */
-export function initChat({ addTodo, loadTodos }) {
+export function initChat({ addTodo, loadTodos, getTodos, deleteTodo }) {
   const messagesEl = document.getElementById('chat-messages')
   const promptsEl = document.querySelector('.chat-prompts')
   const headerEl = document.querySelector('.chat-header')
@@ -23,6 +23,13 @@ export function initChat({ addTodo, loadTodos }) {
   const sendBtn = document.getElementById('chat-send-btn')
 
   if (!messagesEl || !form || !input) return
+
+  const updateSendButtonState = () => {
+    if (sendBtn) sendBtn.disabled = !input.value.trim()
+  }
+
+  updateSendButtonState()
+  input.addEventListener('input', updateSendButtonState)
 
   // --- Chat interaction: intro, visibility, prompt cards, submit ---
   const setPromptsVisible = (visible) => {
@@ -81,6 +88,7 @@ export function initChat({ addTodo, loadTodos }) {
       if (prompt && input) {
         input.value = prompt
         input.focus()
+        updateSendButtonState()
       }
     })
   })
@@ -118,7 +126,7 @@ export function initChat({ addTodo, loadTodos }) {
       removeLoading()
       appendMessage({ role: 'assistant', content: BACKEND_UNREACHABLE })
     } finally {
-      sendBtn.disabled = false
+      updateSendButtonState()
     }
   })
 
@@ -149,14 +157,28 @@ export function initChat({ addTodo, loadTodos }) {
           label.textContent = task
           const addBtn = document.createElement('button')
           addBtn.type = 'button'
-          addBtn.className = 'btn chat-add-btn'
+          addBtn.className = 'btn button-secondaryS chat-add-btn'
           addBtn.textContent = 'Add'
           addBtn.addEventListener('click', async () => {
-            const { error } = await addTodo(task, 'undefined')
-            if (!error) {
-              addBtn.disabled = true
-              addBtn.textContent = 'Added'
-              await loadTodos()
+            const isAdded = addBtn.classList.contains('chat-add-btn--added')
+            if (isAdded) {
+              const todos = getTodos().filter((t) => t.text === task)
+              const todo = todos[todos.length - 1]
+              if (todo) {
+                const { error } = await deleteTodo(todo.id)
+                if (!error) {
+                  addBtn.classList.remove('chat-add-btn--added')
+                  addBtn.textContent = 'Add'
+                  await loadTodos()
+                }
+              }
+            } else {
+              const { error } = await addTodo(task, 'undefined')
+              if (!error) {
+                addBtn.classList.add('chat-add-btn--added')
+                addBtn.textContent = 'Added'
+                await loadTodos()
+              }
             }
           })
           li.appendChild(label)
