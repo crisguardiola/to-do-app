@@ -15,11 +15,80 @@ let messages = []
  */
 export function initChat({ addTodo, loadTodos }) {
   const messagesEl = document.getElementById('chat-messages')
+  const promptsEl = document.querySelector('.chat-prompts')
+  const headerEl = document.querySelector('.chat-header')
+  const panelInner = document.querySelector('.chat-panel-inner')
   const form = document.getElementById('chat-form')
   const input = document.getElementById('chat-input')
   const sendBtn = document.getElementById('chat-send-btn')
 
   if (!messagesEl || !form || !input) return
+
+  // Intro animation: only form visible → show header + typewriter → header moves up, reveal prompts
+  const INTRO_HEADER_DELAY = 350
+  const INTRO_TYPEWRITER_DELAY = 200
+  const INTRO_REVEAL_DURATION = 450
+
+  if (panelInner) {
+    panelInner.classList.add('intro')
+  }
+
+  const subtitleEl = document.querySelector('.chat-subtitle')
+  if (subtitleEl && panelInner) {
+    const fullText = subtitleEl.textContent || ''
+    subtitleEl.textContent = ''
+    subtitleEl.classList.add('chat-subtitle--typing')
+    const cursor = document.createElement('span')
+    cursor.className = 'chat-subtitle-cursor'
+    cursor.setAttribute('aria-hidden', 'true')
+    cursor.textContent = '|'
+    subtitleEl.appendChild(cursor)
+
+    const charDelay = 35
+    let i = 0
+    function typeNext() {
+      if (i < fullText.length) {
+        const node = document.createTextNode(fullText[i])
+        subtitleEl.insertBefore(node, cursor)
+        i++
+        setTimeout(typeNext, charDelay)
+      } else {
+        cursor.remove()
+        subtitleEl.classList.remove('chat-subtitle--typing')
+        panelInner.classList.add('intro-show-prompts')
+        setTimeout(() => {
+          panelInner.classList.remove('intro', 'intro-show-header', 'intro-show-prompts')
+        }, INTRO_REVEAL_DURATION)
+      }
+    }
+    function startTypewriter() {
+      setTimeout(typeNext, INTRO_TYPEWRITER_DELAY)
+    }
+    setTimeout(() => {
+      panelInner.classList.add('intro-show-header')
+      setTimeout(startTypewriter, INTRO_TYPEWRITER_DELAY)
+    }, INTRO_HEADER_DELAY)
+  } else if (panelInner) {
+    panelInner.classList.remove('intro')
+  }
+
+  function setPromptsVisible(visible) {
+    if (!promptsEl) return
+    if (visible) {
+      promptsEl.classList.remove('chat-prompts--hidden')
+    } else {
+      promptsEl.classList.add('chat-prompts--hidden')
+    }
+  }
+
+  function setHeaderVisible(visible) {
+    if (!headerEl) return
+    if (visible) {
+      headerEl.classList.remove('chat-header--hidden')
+    } else {
+      headerEl.classList.add('chat-header--hidden')
+    }
+  }
 
   function scrollToBottom() {
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight
@@ -88,6 +157,8 @@ export function initChat({ addTodo, loadTodos }) {
     for (const msg of messages) {
       messagesEl.appendChild(renderMessage(msg))
     }
+    setPromptsVisible(messages.length === 0)
+    setHeaderVisible(messages.length === 0)
     scrollToBottom()
   }
 
@@ -95,6 +166,10 @@ export function initChat({ addTodo, loadTodos }) {
     messages.push(msg)
     const el = renderMessage(msg)
     messagesEl?.appendChild(el)
+    if (messages.length === 1) {
+      setPromptsVisible(false)
+      setHeaderVisible(false)
+    }
     scrollToBottom()
   }
 
