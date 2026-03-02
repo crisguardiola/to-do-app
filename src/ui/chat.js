@@ -1,4 +1,4 @@
-// --- AI Chat panel: drawer, messages, suggested tasks ---
+// --- AI Chat panel: messages, suggested tasks, form ---
 
 const FRIENDLY_ERROR = "Sorry, I couldn't process that. Please try again later."
 const BACKEND_UNREACHABLE = "Chat isn't available. Start the backend: in the project folder run `node server.js`, then reload."
@@ -24,15 +24,25 @@ export function initChat({ addTodo, loadTodos }) {
 
   if (!messagesEl || !form || !input) return
 
-  // Intro animation: only form visible → show header + typewriter → header moves up, reveal prompts
+  // --- Chat interaction: intro, visibility, prompt cards, submit ---
+  const setPromptsVisible = (visible) => {
+    if (!promptsEl) return
+    visible ? promptsEl.classList.remove('chat-prompts--hidden') : promptsEl.classList.add('chat-prompts--hidden')
+  }
+  const setHeaderVisible = (visible) => {
+    if (!headerEl) return
+    visible ? headerEl.classList.remove('chat-header--hidden') : headerEl.classList.add('chat-header--hidden')
+  }
+  const updateVisibilityFromMessages = () => {
+    const hasMessages = messages.length > 0
+    setPromptsVisible(!hasMessages)
+    setHeaderVisible(!hasMessages)
+  }
+
   const INTRO_HEADER_DELAY = 350
   const INTRO_TYPEWRITER_DELAY = 200
   const INTRO_REVEAL_DURATION = 450
-
-  if (panelInner) {
-    panelInner.classList.add('intro')
-  }
-
+  if (panelInner) panelInner.classList.add('intro')
   const subtitleEl = document.querySelector('.chat-subtitle')
   if (subtitleEl && panelInner) {
     const fullText = subtitleEl.textContent || ''
@@ -43,52 +53,74 @@ export function initChat({ addTodo, loadTodos }) {
     cursor.setAttribute('aria-hidden', 'true')
     cursor.textContent = '|'
     subtitleEl.appendChild(cursor)
-
-    const charDelay = 35
     let i = 0
+    const charDelay = 35
     function typeNext() {
       if (i < fullText.length) {
-        const node = document.createTextNode(fullText[i])
-        subtitleEl.insertBefore(node, cursor)
+        subtitleEl.insertBefore(document.createTextNode(fullText[i]), cursor)
         i++
         setTimeout(typeNext, charDelay)
       } else {
         cursor.remove()
         subtitleEl.classList.remove('chat-subtitle--typing')
         panelInner.classList.add('intro-show-prompts')
-        setTimeout(() => {
-          panelInner.classList.remove('intro', 'intro-show-header', 'intro-show-prompts')
-        }, INTRO_REVEAL_DURATION)
+        setTimeout(() => panelInner.classList.remove('intro', 'intro-show-header', 'intro-show-prompts'), INTRO_REVEAL_DURATION)
       }
-    }
-    function startTypewriter() {
-      setTimeout(typeNext, INTRO_TYPEWRITER_DELAY)
     }
     setTimeout(() => {
       panelInner.classList.add('intro-show-header')
-      setTimeout(startTypewriter, INTRO_TYPEWRITER_DELAY)
+      setTimeout(typeNext, INTRO_TYPEWRITER_DELAY)
     }, INTRO_HEADER_DELAY)
   } else if (panelInner) {
     panelInner.classList.remove('intro')
   }
 
-  function setPromptsVisible(visible) {
-    if (!promptsEl) return
-    if (visible) {
-      promptsEl.classList.remove('chat-prompts--hidden')
-    } else {
-      promptsEl.classList.add('chat-prompts--hidden')
-    }
+  document.querySelectorAll('.chat-prompt-card').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const prompt = btn.getAttribute('data-prompt')
+      if (prompt && input) {
+        input.value = prompt
+        input.focus()
+      }
+    })
+  })
+  if (input.tagName === 'TEXTAREA') {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        form.requestSubmit()
+      }
+    })
   }
-
-  function setHeaderVisible(visible) {
-    if (!headerEl) return
-    if (visible) {
-      headerEl.classList.remove('chat-header--hidden')
-    } else {
-      headerEl.classList.add('chat-header--hidden')
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    const text = input.value.trim()
+    if (!text) return
+    appendMessage({ role: 'user', content: text })
+    input.value = ''
+    const loadingEl = renderLoading()
+    messagesEl?.appendChild(loadingEl)
+    scrollToBottom()
+    sendBtn.disabled = true
+    try {
+      const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) })
+      const data = await res.json().catch(() => ({}))
+      removeLoading()
+      if (!res.ok || data.error) {
+        const errorMsg = (res.status === 404 || res.status === 502) && !data.error ? BACKEND_UNREACHABLE : (data.error || FRIENDLY_ERROR)
+        appendMessage({ role: 'assistant', content: errorMsg })
+      } else if (Array.isArray(data.tasks) && data.tasks.length > 0) {
+        appendMessage({ role: 'assistant', content: '', tasks: data.tasks })
+      } else {
+        appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })
+      }
+    } catch (err) {
+      removeLoading()
+      appendMessage({ role: 'assistant', content: BACKEND_UNREACHABLE })
+    } finally {
+      sendBtn.disabled = false
     }
-  }
+  })
 
   function scrollToBottom() {
     if (messagesEl) messagesEl.scrollTop = messagesEl.scrollHeight
@@ -151,14 +183,18 @@ export function initChat({ addTodo, loadTodos }) {
     return wrap
   }
 
+  function removeLoading() {
+    const loading = messagesEl?.querySelector('[data-loading="true"]')
+    loading?.remove()
+  }
+
   function renderAll() {
     if (!messagesEl) return
     messagesEl.innerHTML = ''
     for (const msg of messages) {
       messagesEl.appendChild(renderMessage(msg))
     }
-    setPromptsVisible(messages.length === 0)
-    setHeaderVisible(messages.length === 0)
+    updateVisibilityFromMessages()
     scrollToBottom()
   }
 
@@ -166,81 +202,9 @@ export function initChat({ addTodo, loadTodos }) {
     messages.push(msg)
     const el = renderMessage(msg)
     messagesEl?.appendChild(el)
-    if (messages.length === 1) {
-      setPromptsVisible(false)
-      setHeaderVisible(false)
-    }
+    updateVisibilityFromMessages()
     scrollToBottom()
   }
-
-  function removeLoading() {
-    const loading = messagesEl?.querySelector('[data-loading="true"]')
-    loading?.remove()
-  }
-
-  document.querySelectorAll('.chat-prompt-card').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const prompt = btn.getAttribute('data-prompt')
-      if (prompt && input) {
-        input.value = prompt
-        input.focus()
-      }
-    })
-  })
-
-  // Enter submits; Shift+Enter inserts newline (textarea only)
-  if (input.tagName === 'TEXTAREA') {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault()
-        form.requestSubmit()
-      }
-    })
-  }
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    const text = input.value.trim()
-    if (!text) return
-
-    appendMessage({ role: 'user', content: text })
-    input.value = ''
-
-    const loadingEl = renderLoading()
-    messagesEl?.appendChild(loadingEl)
-    scrollToBottom()
-
-    sendBtn.disabled = true
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
-      })
-      const data = await res.json().catch(() => ({}))
-      removeLoading()
-
-      if (!res.ok || data.error) {
-        const errorMsg = (res.status === 404 || res.status === 502) && !data.error
-          ? BACKEND_UNREACHABLE
-          : (data.error || FRIENDLY_ERROR)
-        // #region agent log
-        fetch('http://127.0.0.1:7891/ingest/a3b3d6ac-17c1-4a6c-ab02-b849ff98f942',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'087c17'},body:JSON.stringify({sessionId:'087c17',location:'chat.js:errorDisplay',message:'Showing error',data:{status:res.status,errorMsgPreview:(errorMsg||'').slice(0,120)},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
-        appendMessage({ role: 'assistant', content: errorMsg })
-      } else if (Array.isArray(data.tasks) && data.tasks.length > 0) {
-        appendMessage({ role: 'assistant', content: '', tasks: data.tasks })
-      } else {
-        appendMessage({ role: 'assistant', content: FRIENDLY_ERROR })
-      }
-    } catch (err) {
-      removeLoading()
-      appendMessage({ role: 'assistant', content: BACKEND_UNREACHABLE })
-    } finally {
-      sendBtn.disabled = false
-    }
-  })
 
   renderAll()
 }
