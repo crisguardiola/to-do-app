@@ -13,7 +13,7 @@ export function renderAuthBar(user) {
   if (!user || user.is_anonymous) {
     if (guestCtaEl && guestCtaBtn) {
       guestCtaEl.hidden = false
-      guestCtaBtn.textContent = 'Using app as guest'
+      guestCtaBtn.textContent = 'You are using the app as a guest'
     }
     accountBtn.textContent = 'Sign in'
     accountBtn.hidden = false

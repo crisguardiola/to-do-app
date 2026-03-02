@@ -510,9 +510,18 @@ body {
   background: var(--color-bg);
 }
 
-.auth-guest-cta__btn {
-  padding: var(--btn-padding-y) var(--btn-padding-x);
-  font-size: var(--btn-font-size);
+.auth-guest-cta .auth-guest-cta__btn {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--brand-muted);
+  border-color: transparent;
+  color: var(--color-text);
+}
+
+.auth-guest-cta .auth-guest-cta__btn:hover {
+  background-color: var(--brand-muted);
+  border-color: transparent;
+  color: var(--color-text);
 }
 
 /* --- Error message --- */
@@ -1276,9 +1285,9 @@ body {
 
 /* Chat add — active/added state */
 .chat-add-btn--added {
-  background-color: rgb(from var(--brand-hover) r g b / 0.2);
+  background-color: var(--brand-muted);
   border-color: transparent;
-  color: var(--green-600);
+  color: var(--color-text);
 }
 
 .chat-add-btn--added::before {
